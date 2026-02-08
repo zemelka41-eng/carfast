@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        h2 { color: #d32f2f; }
+        .field { margin: 10px 0; }
+        .label { font-weight: bold; }
+        .admin-link { margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 4px; }
+        .admin-link a { color: #d32f2f; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Новая заявка</h2>
+        
+        <div class="field">
+            <span class="label">Имя:</span> {{ lead.name }}
+        </div>
+        
+        <div class="field">
+            <span class="label">Телефон:</span> {{ lead.phone }}
+        </div>
+        
+        {% if lead.email %}
+        <div class="field">
+            <span class="label">Email:</span> {{ lead.email }}
+        </div>
+        {% endif %}
+        
+        {% if lead.product %}
+        <div class="field">
+            <span class="label">Товар:</span> {{ lead.product.model_name_ru }} ({{ lead.product.sku }})
+            {% if request %}
+                <br><a href="{{ request.build_absolute_uri }}{{ lead.product.get_absolute_url }}">Открыть карточку товара</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if lead.source %}
+        <div class="field">
+            <span class="label">Источник:</span> {{ lead.source }}
+        </div>
+        {% endif %}
+        
+        {% if lead.utm_source or lead.utm_medium or lead.utm_campaign %}
+        <div class="field">
+            <span class="label">UTM метки:</span>
+            {% if lead.utm_source %}utm_source={{ lead.utm_source }}{% endif %}
+            {% if lead.utm_medium %} | utm_medium={{ lead.utm_medium }}{% endif %}
+            {% if lead.utm_campaign %} | utm_campaign={{ lead.utm_campaign }}{% endif %}
+            {% if lead.utm_term %} | utm_term={{ lead.utm_term }}{% endif %}
+            {% if lead.utm_content %} | utm_content={{ lead.utm_content }}{% endif %}
+        </div>
+        {% endif %}
+        
+        {% if lead.message %}
+        <div class="field">
+            <span class="label">Сообщение:</span><br>
+            {{ lead.message|linebreaks }}
+        </div>
+        {% endif %}
+        
+        {% if admin_url %}
+        <div class="admin-link">
+            <a href="{{ admin_url }}">
+                Открыть заявку в админке
+            </a>
+        </div>
+        {% elif request %}
+        <div class="admin-link">
+            <a href="{{ request.build_absolute_uri }}/admin/catalog/lead/{{ lead.id }}/change/">
+                Открыть заявку в админке
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+
+
+
+
+

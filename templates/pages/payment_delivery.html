@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Оплата, доставка и лизинг — CARFAST{% endblock %}
+{% block meta_description %}Оплата по безналу, доставка по РФ и помощь с лизингом. Условия фиксируются в КП/договоре.{% endblock %}
+
+{% block content %}
+{% include "partials/_static_seo_zone_top.html" %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <h1 class="h2 mb-2">Оплата и доставка</h1>
+        <div class="text-muted">Коротко и по делу: безналичная оплата, доставка по РФ и помощь с лизингом. Условия фиксируются в КП и договоре.</div>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Оплата</div>
+        <div class="text-muted mb-3">Коротко: работаем по безналу. Документы и этапы оплаты согласуем до подписания.</div>
+        <div class="text-muted mb-3">
+            <ul class="mb-0">
+                <li>Формат: безналичный расчёт по договору.</li>
+                <li>Документы: договор, счёт, закрывающие документы (УПД/накладная) — перечень фиксируется в КП.</li>
+                <li>Этапы: запрос → КП → согласование условий → договор/счёт → оплата → отгрузка.</li>
+                <li>НДС/без НДС: отражаем в КП и договоре.</li>
+                <li>Фиксация цены: условия и срок фиксации указываются в КП/договоре.</li>
+            </ul>
+        </div>
+        <a class="btn btn-ghost" href="{% url 'catalog:contacts' %}">Запросить условия оплаты</a>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Доставка</div>
+        <div class="text-muted mb-3">Коротко: доставка по РФ или самовывоз. Сроки и маршрут согласуем заранее.</div>
+        <div class="text-muted mb-3">
+            <ul class="mb-0">
+                <li>Варианты: доставка до адреса или самовывоз.</li>
+                <li>Сроки: зависят от наличия и региона — подтверждаем в КП.</li>
+                <li>Приёмка: фиксируется актом/накладной при получении.</li>
+                <li>Страхование: по запросу включаем в условия перевозки.</li>
+            </ul>
+        </div>
+        <a class="btn btn-ghost" href="{% url 'catalog:contacts' %}">Уточнить доставку</a>
+    </div>
+</section>
+
+<section>
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Лизинг</div>
+        <div class="text-muted mb-3">Мы не лизинговая компания, но помогаем подобрать программу под задачу.</div>
+        <div class="text-muted">
+            Условия лизинга, ставки и график платежей определяются лизинговой компанией и фиксируются в её договоре.
+            Мы сопровождаем подбор и подготовку базового пакета документов.
+        </div>
+    </div>
+</section>
+
+{% include "partials/_static_seo_zone_bottom.html" %}
+{% include "partials/_cta_strip.html" %}
+{% endblock %}

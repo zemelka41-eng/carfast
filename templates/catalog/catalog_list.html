@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load catalog_format %}
+{% load static %}
+{% block content %}
+<section class="mb-4">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3">
+        <div>
+            <h1 class="display-6 fw-bold mb-1">{{ catalog_h1|default:"Каталог техники" }}</h1>
+            {% if selected_series and selected_series.slug == "shacman" %}
+                <div class="text-muted">SHACMAN — официальный дилер. Остальные бренды — поставка и продажа.</div>
+            {% endif %}
+        </div>
+        <form class="d-flex gap-2" method="get">
+            <input type="search" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Поиск по модели, серии, категории">
+            {% if selected_series %}<input type="hidden" name="series" value="{{ selected_series.slug }}">{% endif %}
+            {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+            {% if request.GET.model %}<input type="hidden" name="model" value="{{ request.GET.model }}">{% endif %}
+            {% if request.GET.availability %}<input type="hidden" name="availability" value="{{ request.GET.availability }}">{% endif %}
+            {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+            {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+            <button class="btn btn-accent" type="submit">Найти</button>
+        </form>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+        <div class="small text-muted me-2">Быстрый фильтр:</div>
+        {% firstof selected_category.slug category.slug selected_category_slug category_slug as current_category_slug %}
+        <a class="btn btn-sm {% if not selected_series %}btn-accent{% else %}btn-ghost{% endif %}"
+           href="{% if current_category_slug %}{% url 'catalog:catalog_category' slug=current_category_slug %}{% else %}{% url 'catalog:catalog_list' %}{% endif %}">
+            Все бренды
+        </a>
+        {% for s in series_list %}
+            <a class="btn btn-sm {% if selected_series and selected_series.slug == s.slug %}btn-accent{% else %}btn-ghost{% endif %}"
+               href="{% if current_category_slug %}{% url 'catalog:catalog_series_category' series_slug=s.slug category_slug=current_category_slug %}{% else %}{% url 'catalog:catalog_series' slug=s.slug %}{% endif %}">
+                {% if s.logo %}
+                    <img class="brand-logo brand-logo--btn me-2" src="{{ s.logo.url }}" alt="{{ s.logo_alt_ru|default:s.name|clean_text }}" loading="lazy">
+                {% elif s.slug|lower == "shacman" %}
+                    <img class="brand-logo brand-logo--btn brand-logo--mono me-2" src="{% static 'img/brands/shacman-logo.png' %}" alt="" loading="lazy">
+                {% elif s.slug|lower == "dayun" %}
+                    <img class="brand-logo brand-logo--btn brand-logo--mono me-2" src="{% static 'img/brands/dayun-logo.png' %}" alt="" loading="lazy">
+                {% endif %}
+                {{ s.name|clean_text }}
+            </a>
+        {% endfor %}
+    </div>
+</section>
+
+{% if selected_series %}
+    <section class="mb-4">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <div class="small text-muted me-2">Категории:</div>
+            <a class="btn btn-sm {% if not selected_category %}btn-accent{% else %}btn-ghost{% endif %}"
+               href="{% url 'catalog:catalog_series' slug=selected_series.slug %}">
+                Все категории
+            </a>
+            {% for c in category_list %}
+                <a class="btn btn-sm {% if selected_category and selected_category.slug == c.slug %}btn-accent{% else %}btn-ghost{% endif %}"
+                   href="{% url 'catalog:catalog_series_category' series_slug=selected_series.slug category_slug=c.slug %}">
+                    {{ c.name|clean_text }}
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+<div id="{% if is_catalog_in_stock %}catalog-in-stock-seo-zone{% else %}catalog-seo-zone{% endif %}" data-seo-block="1">
+{% if catalog_seo_intro_html %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="catalog-seo-intro text-muted">{{ catalog_seo_intro_html|safe }}</div>
+    </div>
+</section>
+{% endif %}
+
+<div class="row g-4">
+    <aside class="col-lg-3">
+        <div class="surface surface--tight">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="fw-bold">Фильтры</div>
+                <a class="small topbar-link" href="{% url 'catalog:catalog_list' %}">Сбросить</a>
+            </div>
+
+            <form method="get" class="d-grid gap-3 catalog-filters">
+                <div class="cf-select dropdown" data-autosubmit="1" data-reset="category,model" data-default-text="Все">
+                    <label class="form-label">Бренд</label>
+                    <input type="hidden" name="series" value="{{ selected_series.slug|default:'' }}">
+                    <button class="cf-select__btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ selected_series.name|default:"Все"|clean_text }}
+                    </button>
+                    <ul class="dropdown-menu cf-select__menu w-100">
+                        <li>
+                            <button class="dropdown-item {% if not selected_series %}active{% endif %}" type="button" data-value="">Все</button>
+                        </li>
+                        {% for s in series_list %}
+                            <li>
+                                <button class="dropdown-item {% if selected_series and selected_series.slug == s.slug %}active{% endif %}" type="button" data-value="{{ s.slug }}">{{ s.name|clean_text }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="cf-select dropdown" data-default-text="Все">
+                    <label class="form-label">Категория</label>
+                    <input type="hidden" name="category" value="{{ selected_category.slug|default:'' }}">
+                    <button class="cf-select__btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ selected_category.name|default:"Все"|clean_text }}
+                    </button>
+                    <ul class="dropdown-menu cf-select__menu w-100">
+                        <li>
+                            <button class="dropdown-item {% if not selected_category %}active{% endif %}" type="button" data-value="">Все</button>
+                        </li>
+                        {% for c in category_list %}
+                            <li>
+                                <button class="dropdown-item {% if selected_category and selected_category.slug == c.slug %}active{% endif %}" type="button" data-value="{{ c.slug }}">{{ c.name|clean_text }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="cf-select dropdown" data-default-text="Все">
+                    <label class="form-label">Модель</label>
+                    <input type="hidden" name="model" value="{{ request.GET.model|default:'' }}">
+                    <button class="cf-select__btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ selected_model.name|default:"Все"|clean_text }}
+                    </button>
+                    <ul class="dropdown-menu cf-select__menu w-100">
+                        <li>
+                            <button class="dropdown-item {% if not request.GET.model %}active{% endif %}" type="button" data-value="">Все</button>
+                        </li>
+                        {% for m in model_list %}
+                            <li>
+                                <button class="dropdown-item {% if request.GET.model == m.slug %}active{% endif %}" type="button" data-value="{{ m.slug }}">{{ m.name|clean_text }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="cf-select dropdown" data-default-text="Любое">
+                    <label class="form-label">Наличие</label>
+                    <input type="hidden" name="availability" value="{{ request.GET.availability|default:'' }}">
+                    <button class="cf-select__btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if not request.GET.availability %}
+                            Любое
+                        {% elif request.GET.availability|lower == "in_stock" or request.GET.availability == "IN_STOCK" %}
+                            В наличии
+                        {% elif request.GET.availability|lower == "on_request" or request.GET.availability == "ON_REQUEST" %}
+                            Под заказ
+                        {% else %}
+                            {{ request.GET.availability }}
+                        {% endif %}
+                    </button>
+                    <ul class="dropdown-menu cf-select__menu w-100">
+                        <li>
+                            <button class="dropdown-item {% if not request.GET.availability %}active{% endif %}" type="button" data-value="">Любое</button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item {% if request.GET.availability|lower == "in_stock" or request.GET.availability == "IN_STOCK" %}active{% endif %}" type="button" data-value="in_stock">В наличии</button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item {% if request.GET.availability|lower == "on_request" or request.GET.availability == "ON_REQUEST" %}active{% endif %}" type="button" data-value="on_request">Под заказ</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <label class="form-label">Цена, ₽</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" class="form-control" name="price_min" placeholder="от" value="{{ request.GET.price_min }}">
+                        <input type="number" class="form-control" name="price_max" placeholder="до" value="{{ request.GET.price_max }}">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">Поиск</label>
+                    <input type="search" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Введите запрос">
+                </div>
+
+                <button class="btn btn-accent w-100" type="submit">Применить</button>
+            </form>
+        </div>
+    </aside>
+
+    <section class="col-lg-9">
+        <div class="row g-3 align-items-stretch">
+            {% for product in products %}
+                <div class="col-md-6 d-flex">
+                    {% include "catalog/_product_card.html" with product=product variant="catalog" show_model_variant=1 show_stock_line=1 show_kp_button=1 %}
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    {% if has_filters %}
+                        <div class="surface p-4 p-lg-5">
+                            <div class="h3 mb-2">Ничего не найдено</div>
+                            <div class="text-muted mb-4">Попробуйте изменить фильтры или запросить коммерческое предложение.</div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a class="btn btn-accent" href="{% url 'catalog:catalog_list' %}">Сбросить фильтры</a>
+                                <a class="btn btn-ghost" href="{% url 'catalog:lead_page' %}">Получить КП</a>
+                                <a class="btn btn-ghost" href="{% url 'catalog:brand_list' %}">Посмотреть все бренды</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="surface p-4 p-lg-5">
+                            <div class="h3 mb-2">Товары скоро появятся</div>
+                            <div class="text-muted mb-4">Каталог обновляется. Если нужна конкретная техника — запросите коммерческое предложение.</div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}">Получить КП</a>
+                                <a class="btn btn-ghost" href="{% url 'catalog:brand_list' %}">Посмотреть все бренды</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+{% if catalog_seo_body_html %}
+<section class="mt-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="catalog-seo-body text-muted">{{ catalog_seo_body_html|safe }}</div>
+    </div>
+</section>
+{% endif %}
+
+{% if catalog_description %}
+    <section class="mt-5">
+        <div class="surface p-4 p-lg-5">
+            <div class="h4 mb-3">Описание</div>
+            <div class="text-muted">{{ catalog_description|linebreaksbr }}</div>
+        </div>
+    </section>
+{% endif %}
+
+{% if catalog_faq_items %}
+    <section class="mt-4">
+        <div class="surface p-4 p-lg-5">
+            <div class="h4 mb-3">FAQ</div>
+            <div class="accordion" id="catalogFaq">
+                {% for item in catalog_faq_items %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#catalogFaq{{ forloop.counter }}"
+                                    aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                                    aria-controls="catalogFaq{{ forloop.counter }}">
+                                {{ item.question }}
+                            </button>
+                        </h2>
+                        <div id="catalogFaq{{ forloop.counter }}"
+                             class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                             data-bs-parent="#catalogFaq">
+                            <div class="accordion-body">{{ item.answer }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if is_catalog_in_stock and quick_nav_links %}
+<section class="mt-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-3">Смотрите также</div>
+        <div class="d-flex flex-wrap gap-2">
+            {% for link in quick_nav_links %}
+            <a class="btn btn-ghost btn-sm" href="{{ link.url }}">{{ link.label }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+</div>{# /#catalog-seo-zone or #catalog-in-stock-seo-zone #}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    function initCatalogFilterDropdowns() {
+      const form = document.querySelector("form.catalog-filters");
+      if (!form) return;
+
+      form.addEventListener("click", function (e) {
+        const item = e.target.closest(".cf-select__menu .dropdown-item");
+        if (!item) return;
+
+        const select = item.closest(".cf-select");
+        if (!select) return;
+
+        e.preventDefault();
+
+        const rawValue = item.getAttribute("data-value");
+        const value = rawValue === null ? "" : rawValue;
+        const input = select.querySelector('input[type="hidden"][name]');
+        if (input) input.value = value;
+
+        const btn = select.querySelector(".cf-select__btn");
+        if (btn) btn.textContent = (item.textContent || "").trim();
+
+        const toggle = select.querySelector('[data-bs-toggle="dropdown"]');
+        if (toggle && window.bootstrap && window.bootstrap.Dropdown) {
+          window.bootstrap.Dropdown.getOrCreateInstance(toggle).hide();
+        }
+
+        const autosubmit = (select.getAttribute("data-autosubmit") || "") === "1";
+        if (!autosubmit) return;
+
+        const resetRaw = select.getAttribute("data-reset") || "";
+        const resetFields = resetRaw
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        for (const fieldName of resetFields) {
+          const resetInput = form.querySelector(
+            `input[type="hidden"][name="${fieldName}"]`
+          );
+          if (resetInput) resetInput.value = "";
+
+          const resetWrapper = resetInput ? resetInput.closest(".cf-select") : null;
+          let defaultText = "Все";
+          if (resetWrapper) {
+            const dt = resetWrapper.getAttribute("data-default-text");
+            if (dt) defaultText = dt;
+          }
+          const resetBtn = resetWrapper ? resetWrapper.querySelector(".cf-select__btn") : null;
+          if (resetBtn) resetBtn.textContent = defaultText;
+        }
+
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+        } else {
+          form.submit();
+        }
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCatalogFilterDropdowns);
+    } else {
+      initCatalogFilterDropdowns();
+    }
+  })();
+</script>
+{% endblock %}
+

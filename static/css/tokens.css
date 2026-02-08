@@ -1,0 +1,30 @@
+:root {
+  /* CARFAST design tokens (shared between public site + Django admin) */
+  --accent: #e10600;
+  --accent-rgb: 225, 6, 0;
+  --bg: #050507;
+  --surface: #0b0b0e;
+  --surface-2: #101014;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f4f6f8;
+  --text-rgb: 244, 246, 248;
+  --muted: rgba(244, 246, 248, 0.72);
+  --link: var(--accent);
+  --link-visited: rgba(var(--accent-rgb), 0.85);
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  /* Derived helpers (avoid repeating hardcoded RGBA values) */
+  --border-12: rgba(255, 255, 255, 0.12);
+  --accent-12: rgba(var(--accent-rgb), 0.12);
+  --accent-18: rgba(var(--accent-rgb), 0.18);
+  --accent-22: rgba(var(--accent-rgb), 0.22);
+  --accent-35: rgba(var(--accent-rgb), 0.35);
+  --accent-55: rgba(var(--accent-rgb), 0.55);
+  --accent-70: rgba(var(--accent-rgb), 0.7);
+  --accent-75: rgba(var(--accent-rgb), 0.75);
+  --accent-80: rgba(var(--accent-rgb), 0.8);
+}
+
+

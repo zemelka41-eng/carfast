@@ -1,0 +1,39 @@
+[Unit]
+Description=gunicorn daemon for carfst_site
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/carfst
+EnvironmentFile=/opt/carfst/.env
+ExecStart=/opt/carfst/.venv/bin/gunicorn carfst_site.wsgi:application --bind 127.0.0.1:8000 --workers=${GUNICORN_WORKERS:-3} --timeout=${GUNICORN_TIMEOUT:-120}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+[Unit]
+Description=Gunicorn daemon for carfst.ru Django application
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/carfst
+Environment="PATH=/var/www/carfst/venv/bin"
+ExecStart=/var/www/carfst/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 127.0.0.1:8000 \
+    --timeout 60 \
+    --access-logfile /var/log/gunicorn/carfst_access.log \
+    --error-logfile /var/log/gunicorn/carfst_error.log \
+    --log-level info \
+    carfst_site.wsgi:application
+
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+

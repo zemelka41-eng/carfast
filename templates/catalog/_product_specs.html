@@ -1,0 +1,35 @@
+{# Common template for rendering product specifications #}
+{# Expects: options_rows (list of dicts with 'label', 'value', 'is_list' keys) #}
+{# FIXED: Use safe key access to avoid dict.values() method call #}
+{% if options_rows %}
+    <div class="table-responsive">
+        <table class="table table-sm mb-0 product-specs-table">
+            <tbody>
+                {% for row in options_rows %}
+                    <tr>
+                        <th scope="row" class="fw-bold">{{ row.label }}</th>
+                        <td>
+                            {% if "is_list" in row and row.is_list %}
+                                {% if "value" in row %}
+                                    <ul class="mb-0 ps-3">
+                                        {% for item in row.value %}
+                                            {% if item|lower != "pair" %}
+                                                <li>{{ item }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% else %}
+                                {% if "value" in row %}
+                                    {% if row.value|lower != "pair" %}
+                                        {{ row.value }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}

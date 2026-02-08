@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load catalog_format %}
+{% block content %}
+<section class="mb-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'catalog:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shacman_hub' %}">SHACMAN</a></li>
+            {% if category %}
+                <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+            {% elif hub_label %}
+                <li class="breadcrumb-item active" aria-current="page">{{ hub_label }}</li>
+            {% else %}
+                <li class="breadcrumb-item active" aria-current="page">Каталог</li>
+            {% endif %}
+        </ol>
+    </nav>
+    <h1 class="display-6 fw-bold mb-2">{{ catalog_h1|default:"SHACMAN" }}</h1>
+    {% if not category %}
+        <p class="text-muted mb-3">Официальный дилер SHACMAN. Самосвалы, седельные тягачи, автобетоносмесители. Цена, наличие, лизинг, доставка по РФ.</p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a class="btn btn-accent btn-sm" href="{% url 'shacman_in_stock' %}">В наличии</a>
+            {% for cat in shacman_hub_categories %}
+                <a class="btn btn-ghost btn-sm" href="{% url 'shacman_category' category_slug=cat.slug %}">{{ cat.name }}</a>
+            {% empty %}
+                <a class="btn btn-ghost btn-sm" href="{% url 'shacman_category' category_slug='samosvaly' %}">Самосвалы</a>
+                <a class="btn btn-ghost btn-sm" href="{% url 'shacman_category' category_slug='sedelnye-tyagachi' %}">Седельные тягачи</a>
+                <a class="btn btn-ghost btn-sm" href="{% url 'shacman_category' category_slug='avtobetonosmesiteli' %}">Автобетоносмесители</a>
+            {% endfor %}
+        </div>
+    {% elif category %}
+        <p class="text-muted mb-3">{{ catalog_description|default:"" }}</p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a class="btn btn-accent btn-sm" href="{% url 'shacman_category_in_stock' category_slug=category.slug %}">В наличии</a>
+            <a class="btn btn-ghost btn-sm" href="{% url 'shacman_hub' %}">Все SHACMAN</a>
+            {% for cat in shacman_hub_categories %}
+                {% if cat.slug != category.slug %}
+                <a class="btn btn-ghost btn-sm" href="{% url 'shacman_category' category_slug=cat.slug %}">{{ cat.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+
+<div id="shacman-hub-seo-zone" data-seo-block="1">
+{% if hub_seo.seo_intro_html %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5 shacman-hub-seo-intro text-muted">
+        {{ hub_seo.seo_intro_html|safe }}
+    </div>
+</section>
+{% endif %}
+
+<section class="mb-4">
+    <div class="row g-3">
+        {% for product in products %}
+            <div class="col-md-6 col-lg-4 d-flex">
+                {% include "catalog/_product_card.html" with product=product variant="catalog" show_model_variant=1 show_stock_line=1 show_kp_button=1 %}
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="surface p-4 p-lg-5">
+                    <div class="h3 mb-2">В этой категории пока нет предложений</div>
+                    <div class="text-muted mb-4">Посмотрите другие разделы SHACMAN или запросите коммерческое предложение.</div>
+                    <a class="btn btn-accent" href="{% url 'shacman_hub' %}">Весь каталог SHACMAN</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if page_obj and page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-4" aria-label="Пагинация">
+            <ul class="pagination justify-content-center flex-wrap">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                    </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперёд</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</section>
+
+{% comment %}Single block under cards: prefer seo_body_html, else seo_text (no duplicate SEO blocks).{% endcomment %}
+{% if hub_seo.seo_body_html or hub_seo.seo_text %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="shacman-hub-seo-body text-muted">
+            {% if hub_seo.seo_body_html %}
+                {{ hub_seo.seo_body_html|safe }}
+            {% else %}
+                {{ hub_seo.seo_text|safe }}
+            {% endif %}
+        </div>
+        {% if hub_seo.also_search_line %}
+        <p class="small text-muted mt-3 mb-0">{{ hub_seo.also_search_line }}</p>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+{% if shacman_top_products %}
+<section class="mb-4" aria-label="Популярные модели SHACMAN">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-3">Популярные модели</div>
+        <ul class="list-unstyled mb-0 row g-2">
+            {% for p in shacman_top_products %}
+            <li class="col-md-6 col-lg-4"><a href="{% url 'catalog:product_detail' slug=p.slug %}">{{ p.model_name_ru }}{% if p.wheel_formula %} {{ p.wheel_formula }}{% endif %}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+{% if shacman_combo_links %}
+<section class="mb-4" aria-label="Связанные подборки SHACMAN">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-3">Связанные подборки</div>
+        <ul class="list-unstyled mb-0 row g-2">
+            {% for link in shacman_combo_links %}
+            <li class="col-md-6 col-lg-4"><a href="{{ link.url }}">{{ link.label }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+{% if catalog_faq_items %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-3">FAQ</div>
+        <div class="accordion" id="shacmanFaq">
+            {% for item in catalog_faq_items %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#shacmanFaq{{ forloop.counter }}"
+                                aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                                aria-controls="shacmanFaq{{ forloop.counter }}">
+                            {{ item.question }}
+                        </button>
+                    </h2>
+                    <div id="shacmanFaq{{ forloop.counter }}"
+                         class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                         data-bs-parent="#shacmanFaq">
+                        <div class="accordion-body">{{ item.answer }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if related_blog_posts %}
+<section class="mb-4" aria-label="Полезные материалы">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-3">Полезные материалы</div>
+        <ul class="list-unstyled mb-0 row g-2">
+            {% for post in related_blog_posts %}
+            <li class="col-md-6 col-lg-4"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <nav class="small text-muted mb-2">
+            <a class="link-muted link-accent-hover" href="{% url 'catalog:home' %}">Главная</a>
+            <span class="mx-2">/</span>
+            <span>Блог</span>
+        </nav>
+        <h1 class="h2 mb-2">Блог</h1>
+        <div class="text-muted">Практика по финансированию, покупке и эксплуатации техники.</div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="row g-4">
+        {% for post in page_obj %}
+            <div class="col-12 col-lg-6">
+                <div class="card-dark h-100 p-4 d-flex flex-column gap-3">
+                    {% if post.cover_image %}
+                        <img class="rounded w-100" src="{{ post.cover_image.url }}" alt="{{ post.cover_alt|default:post.title }}" loading="lazy">
+                    {% endif %}
+                    <div>
+                        <div class="small text-muted mb-2">{{ post.published_at|date:"d.m.Y" }}</div>
+                        <div class="h4 mb-2">{{ post.title }}</div>
+                        <div class="text-muted">{{ post.excerpt }}</div>
+                    </div>
+                    <div class="mt-auto">
+                        <a class="btn btn-ghost" href="{{ post.get_absolute_url }}">Читать статью</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="surface p-4 p-lg-5">
+                    <div class="h4 mb-2">Публикации скоро появятся</div>
+                    <div class="text-muted">Мы готовим материалы о технике, финансировании и эксплуатации.</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% if page_obj.paginator.num_pages > 1 %}
+    <nav class="d-flex justify-content-center mb-5">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперёд</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+{% endblock %}

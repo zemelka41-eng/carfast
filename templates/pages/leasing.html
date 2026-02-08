@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Лизинг — CARFAST{% endblock %}
+{% block meta_description %}Лизинг техники с подбором условий и сопровождением сделки.{% endblock %}
+
+{% block content %}
+{% include "partials/_static_seo_zone_top.html" %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <h1 class="h2 mb-2">Лизинг</h1>
+        <div class="text-muted">Подберём программу под вашу задачу, бюджет и сроки.</div>
+        <div class="mt-4">
+            <div class="small text-muted mb-2">Партнёры по лизингу</div>
+            <div class="row g-3 leasing-partners-grid">
+                {% for partner in leasing_partners_primary %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card-dark h-100 p-3 leasing-partner-card">
+                            <div class="leasing-partner-logo mb-3">
+                                <picture>
+                                    <source type="image/webp" srcset="{% static partner.logo_webp_path %}">
+                                    <img src="{% static partner.logo_png_path %}"
+                                         alt="{{ partner.display_name }}"
+                                         loading="lazy">
+                                </picture>
+                            </div>
+                            <div class="fw-bold">{{ partner.display_name }}</div>
+                            <div class="small text-muted leasing-partner-desc">{{ partner.description }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="collapse mt-2" id="leasingPartnersAll">
+                <div class="row g-3 leasing-partners-grid mt-1">
+                    {% for partner in leasing_partners_more %}
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-dark h-100 p-3 leasing-partner-card">
+                                <div class="leasing-partner-logo mb-3">
+                                    <picture>
+                                        <source type="image/webp" srcset="{% static partner.logo_webp_path %}">
+                                        <img src="{% static partner.logo_png_path %}"
+                                             alt="{{ partner.display_name }}"
+                                             loading="lazy">
+                                    </picture>
+                                </div>
+                                <div class="fw-bold">{{ partner.display_name }}</div>
+                                <div class="small text-muted leasing-partner-desc">{{ partner.description }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="btn btn-sm btn-ghost mt-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#leasingPartnersAll"
+                    aria-expanded="false"
+                    aria-controls="leasingPartnersAll"
+                    id="leasingPartnersToggle">
+                Показать всех партнёров
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Подбор условий</div>
+        <div class="text-muted mb-3">Сравним предложения, поможем с документами и согласуем график платежей.</div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}">Получить расчёт</a>
+            <a class="btn btn-ghost" href="{% url 'catalog:catalog_in_stock' %}">Подобрать технику</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Сопровождение сделки</div>
+        <div class="text-muted">От заявки до передачи техники — с прозрачными условиями и контролем сроков.</div>
+    </div>
+</section>
+
+{% include "partials/_static_seo_zone_bottom.html" %}
+{% include "partials/_cta_strip.html" %}
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("leasingPartnersToggle");
+    const panel = document.getElementById("leasingPartnersAll");
+    if (!toggle || !panel) return;
+    panel.addEventListener("shown.bs.collapse", function () {
+      toggle.textContent = "Скрыть";
+      toggle.setAttribute("aria-expanded", "true");
+    });
+    panel.addEventListener("hidden.bs.collapse", function () {
+      toggle.textContent = "Показать всех партнёров";
+      toggle.setAttribute("aria-expanded", "false");
+    });
+  });
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}Сервис — CARFAST{% endblock %}
+{% block meta_description %}Сервис китайских грузовиков и спецтехники: диагностика, план работ, запчасти под ремонт и рекомендации для снижения простоев и рисков.{% endblock %}
+
+{% block content %}
+{% include "partials/_static_seo_zone_top.html" %}
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="surface p-4 p-lg-5">
+          <h1 class="h2 mb-2">Сервис и обслуживание китайских грузовиков и спецтехники</h1>
+          <div class="text-muted">
+            Сервис — это не «починить по факту», а снизить простои и предсказуемо держать технику в линии. Помогаем с диагностикой, планированием работ и запчастями.
+          </div>
+          <div class="text-muted small mt-2">
+            Работаем через собственный и партнёрский сервис; формат и география зависят от города и задачи — уточняем при обращении.
+          </div>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}">Записаться / описать задачу</a>
+            <a class="btn btn-ghost" href="{% url 'catalog:contacts' %}">Контакты</a>
+            <a class="btn btn-ghost" href="{% url 'catalog:parts' %}">Запчасти</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="surface p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">С какими задачами помогаем</h2>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="fw-bold mb-1">Диагностика “не едет/ошибки/падает давление”</div>
+              <div class="text-muted small">Разбираем симптомы по данным и даём план проверки.</div>
+            </div>
+            <div class="col-md-6">
+              <div class="fw-bold mb-1">Пневмосистема и тормоза</div>
+            <div class="text-muted small">Утечки, падение давления, компрессор/осушитель — подтверждаем причину по результатам диагностики.</div>
+            </div>
+            <div class="col-md-6">
+              <div class="fw-bold mb-1">Топливная система</div>
+              <div class="text-muted small">Плохой запуск, провалы, нестабильная работа — без “заочных” диагнозов.</div>
+            </div>
+            <div class="col-md-6">
+              <div class="fw-bold mb-1">Охлаждение и перегрев</div>
+              <div class="text-muted small">Забивание грязью/пылью, течи, патрубки и т.д.</div>
+            </div>
+            <div class="col-md-6">
+              <div class="fw-bold mb-1">Электрика</div>
+              <div class="text-muted small">Проводка, датчики, свет, заряд.</div>
+            </div>
+            <div class="col-md-6">
+              <div class="fw-bold mb-1">Подвеска/рулевое/ступицы</div>
+              <div class="text-muted small">Вибрации, люфты, неравномерный износ.</div>
+            </div>
+          </div>
+          <div class="text-muted small mt-3">
+            Важно: регламенты ТО и перечни расходников зависят от модели/комплектации и сверяются с документацией производителя — уточняем под ваш VIN/конфигурацию.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="surface p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">Как мы работаем: 5 шагов</h2>
+          <div class="d-grid gap-3">
+            <div><div class="fw-bold text-accent mb-1">1. Сбор вводных</div><div class="text-muted small">Техника, условия работы, симптомы, срочность.</div></div>
+            <div><div class="fw-bold text-accent mb-1">2. Первичная диагностика по данным</div><div class="text-muted small">И/или осмотр — формат согласуем по месту нахождения техники.</div></div>
+            <div><div class="fw-bold text-accent mb-1">3. План работ</div><div class="text-muted small">Что делаем сразу, что контролируем, что под замену/ремонт.</div></div>
+            <div><div class="fw-bold text-accent mb-1">4. Запчасти под ремонт</div><div class="text-muted small">Оригинал/аналог — где допустимо. Сроки и наличие — после проверки.</div></div>
+            <div><div class="fw-bold text-accent mb-1">5. Рекомендации</div><div class="text-muted small">Что контролировать дальше, чтобы снизить повторение поломки и простои.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="card-dark p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">Что прислать, чтобы ускорить диагностику</h2>
+          <ul class="mb-0">
+            <li>Марка/модель, год (если знаете)</li>
+            <li>VIN/номер рамы или фото таблички</li>
+            <li>Пробег/наработка (если есть)</li>
+            <li>Симптомы: когда проявляется (на холодную/под нагрузкой/на скорости)</li>
+            <li>Фото/видео проблемы, фото узла/места утечки</li>
+            <li>Ошибки с панели/сканера (текстом или фото)</li>
+            <li>Город/место нахождения техники и срочность</li>
+          </ul>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}">Отправить данные</a>
+            <a class="btn btn-ghost" href="{% url 'catalog:contacts' %}">Каналы связи</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="surface p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">Запчасти и расходники под сервис</h2>
+          <div class="text-muted">
+            Частая причина простоя — ожидание деталей. Можем подобрать запчасти по VIN/артикулу и согласовать поставку «под ремонт».
+            Сроки и наличие подтверждаем после проверки по конкретной позиции.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="surface p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">Когда лучше не “тянуть до последнего”</h2>
+          <div class="text-muted">
+            Если есть признаки, которые могут привести к аварии или дорогому ремонту — технику лучше остановить и провести диагностику.
+            Рекомендации не заменяют инструкцию производителя и требования безопасности.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="surface p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">FAQ</h2>
+          <div class="accordion" id="serviceFaq">
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="serviceFaqH1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#serviceFaqC1" aria-expanded="true" aria-controls="serviceFaqC1">
+                  Можно ли “заочно” сказать, что сломалось?
+                </button>
+              </h3>
+              <div id="serviceFaqC1" class="accordion-collapse collapse show" aria-labelledby="serviceFaqH1" data-bs-parent="#serviceFaq">
+                <div class="accordion-body text-muted">
+                  Опишем план проверки и формат диагностики. Финальный диагноз — только после диагностики/осмотра.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="serviceFaqH2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#serviceFaqC2" aria-expanded="false" aria-controls="serviceFaqC2">
+                  Сколько стоит ремонт/ТО и какие сроки?
+                </button>
+              </h3>
+              <div id="serviceFaqC2" class="accordion-collapse collapse" aria-labelledby="serviceFaqH2" data-bs-parent="#serviceFaq">
+                <div class="accordion-body text-muted">
+                  Зависит от узла, симптомов и наличия запчастей. Точные сроки и стоимость — после диагностики и подтверждения наличия/логистики.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="serviceFaqH3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#serviceFaqC3" aria-expanded="false" aria-controls="serviceFaqC3">
+                  Вы работаете по всей России?
+                </button>
+              </h3>
+              <div id="serviceFaqC3" class="accordion-collapse collapse" aria-labelledby="serviceFaqH3" data-bs-parent="#serviceFaq">
+                <div class="accordion-body text-muted">
+                  По запчастям и консультациям — да. Формат сервиса/ремонта и география согласуются по месту нахождения техники.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "partials/_static_seo_zone_bottom.html" %}
+{% include "partials/_cta_strip.html" %}
+{% endblock %}

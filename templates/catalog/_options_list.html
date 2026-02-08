@@ -1,0 +1,36 @@
+{# Renders normalized options list from `options_to_items` filter #}
+{# FIXED: Use safe key access to avoid dict.values() method call #}
+{% if options_list %}
+  <ul class="mb-0">
+    {% for item in options_list %}
+      {% if item.type == "pair" %}
+        <li>
+          <span class="text-muted">{{ item.key }}:</span>
+          {% if "values" in item %}
+            {% with item_values=item.values %}
+              <ul class="mt-1 mb-0">
+                {% for v in item_values %}
+                  {% if v|lower != "pair" %}
+                    <li>{{ v }}</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endwith %}
+          {% elif "value" in item %}
+            {% if item.value|lower != "pair" %}
+              {{ item.value }}
+            {% endif %}
+          {% endif %}
+        </li>
+      {% else %}
+        {% if "value" in item %}
+          {% if item.value|lower != "pair" %}
+            <li>{{ item.value }}</li>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+

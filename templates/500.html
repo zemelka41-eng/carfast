@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Ошибка сервера — CARFAST{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-1 fw-bold mb-4">500</h1>
+    <h2 class="h3 mb-4">Внутренняя ошибка сервера</h2>
+    <p class="text-muted mb-5">
+        Произошла техническая ошибка. Мы уже работаем над её устранением.
+    </p>
+    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+        <a class="btn btn-accent btn-lg" href="{% url 'catalog:lead_page' %}">Получить КП</a>
+        {% if contact_whatsapp_href %}
+        <a class="btn btn-outline-accent btn-lg" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer">
+            WhatsApp
+        </a>
+        {% endif %}
+        {% if contact_telegram_href %}
+        <a class="btn btn-outline-accent btn-lg" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer">
+            Telegram
+        </a>
+        {% endif %}
+        {% if contact_max_href %}
+        <a class="btn btn-outline-accent btn-lg" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer">
+            MAX
+        </a>
+        {% endif %}
+    </div>
+    <div class="mt-5">
+        <a href="{% url 'catalog:home' %}" class="link-muted link-accent-hover">← Вернуться на главную</a>
+    </div>
+</div>
+{% endblock %}

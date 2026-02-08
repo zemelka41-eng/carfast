@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ meta_title|default:"Гайд по админке" }} — CARFAST{% endblock %}
+{% block meta_description %}{{ meta_description|default:"Инструкция по наполнению сайта (бренды, категории, товары, контакты)." }}{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3">
+            <div>
+                <div class="text-uppercase small text-muted mb-2">Внутренняя инструкция</div>
+                <h1 class="display-6 fw-bold mb-1">Гайд по админке</h1>
+                <div class="text-muted">Как быстро наполнить сайт: бренды, категории, товары, фото и контакты.</div>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-ghost" href="/admin/" target="_blank" rel="noopener noreferrer">Открыть админку</a>
+                <a class="btn btn-accent" href="{% url 'catalog:brand_list' %}" target="_blank" rel="noopener noreferrer">Проверить /brands/</a>
+            </div>
+        </div>
+
+        <hr class="hr-dim my-4">
+
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <div class="surface-2 p-4 h-100">
+                    <div class="fw-bold mb-2">Шаг 1. Добавить бренд (Series)</div>
+                    <ol class="text-muted mb-0">
+                        <li class="mb-2">Перейдите в <a class="link-accent-hover" href="/admin/catalog/series/" target="_blank" rel="noopener noreferrer">Админка → Catalog → Series</a>.</li>
+                        <li class="mb-2">Нажмите <span class="fw-bold">Add</span> и заполните <span class="fw-bold">Name</span> и <span class="fw-bold">Slug</span> (slug — латиница, без пробелов).</li>
+                        <li class="mb-2">Заполните <span class="fw-bold">History</span> (история бренда) — будет показана на странице бренда.</li>
+                        <li class="mb-0">Сохраните.</li>
+                    </ol>
+                    <div class="small text-muted mt-3">
+                        SHACMAN: используйте slug <span class="fw-bold">shacman</span> — тогда на сайте появится статус «Официальный дилер».
+                        Для остальных брендов автоматически показывается «Поставка и продажа».
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="surface-2 p-4 h-100">
+                    <div class="fw-bold mb-2">Шаг 2. Добавить категорию (Category)</div>
+                    <ol class="text-muted mb-0">
+                        <li class="mb-2">Перейдите в <a class="link-accent-hover" href="/admin/catalog/category/" target="_blank" rel="noopener noreferrer">Админка → Catalog → Category</a>.</li>
+                        <li class="mb-2">Нажмите <span class="fw-bold">Add</span>, заполните <span class="fw-bold">Name</span> и <span class="fw-bold">Slug</span>.</li>
+                        <li class="mb-0">Сохраните.</li>
+                    </ol>
+                    <div class="small text-muted mt-3">Категории используются для фильтра в каталоге и в карточках товаров.</div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="surface-2 p-4 h-100">
+                    <div class="fw-bold mb-2">Шаг 3. Добавить товар (Product)</div>
+                    <ol class="text-muted mb-0">
+                        <li class="mb-2">Перейдите в <a class="link-accent-hover" href="/admin/catalog/product/" target="_blank" rel="noopener noreferrer">Админка → Catalog → Product</a> и нажмите <span class="fw-bold">Add</span>.</li>
+                        <li class="mb-2">Заполните обязательное: <span class="fw-bold">SKU</span>, <span class="fw-bold">Slug</span>, <span class="fw-bold">Model name (RU)</span>.</li>
+                        <li class="mb-2">Выберите <span class="fw-bold">Series</span> (бренд) и <span class="fw-bold">Category</span>.</li>
+                        <li class="mb-2">Укажите <span class="fw-bold">Availability</span> (в наличии/под заказ) и цену (если известна).</li>
+                        <li class="mb-2">Добавьте <span class="fw-bold">Short description (RU)</span> — он используется в карточках.</li>
+                        <li class="mb-2">Проверьте галочку <span class="fw-bold">Published</span>, чтобы товар был виден на сайте.</li>
+                        <li class="mb-0">Сохраните.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="surface-2 p-4 h-100">
+                    <div class="fw-bold mb-2">Шаг 4. Добавить фото товара</div>
+                    <div class="text-muted">
+                        Самый удобный способ — прямо внутри товара через блок <span class="fw-bold">Product images</span>.
+                    </div>
+                    <ol class="text-muted mt-3 mb-0">
+                        <li class="mb-2">Откройте товар в админке: <a class="link-accent-hover" href="/admin/catalog/product/" target="_blank" rel="noopener noreferrer">Product</a> → нужная запись.</li>
+                        <li class="mb-2">Внизу страницы найдите таблицу <span class="fw-bold">Product images</span> и добавьте строки.</li>
+                        <li class="mb-2">Загрузите файл, задайте <span class="fw-bold">Order</span> (0 — главное фото, 1/2/3 — дополнительные).</li>
+                        <li class="mb-0">Сохраните товар ещё раз.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="surface-2 p-4 h-100">
+                    <div class="fw-bold mb-2">Шаг 5. Контакты (SiteSettings)</div>
+                    <ol class="text-muted mb-0">
+                        <li class="mb-2">Перейдите в <a class="link-accent-hover" href="/admin/catalog/sitesettings/" target="_blank" rel="noopener noreferrer">Админка → Catalog → Site settings</a>.</li>
+                        <li class="mb-2">Откройте единственную запись (обычно id=1) и заполните телефон, email, адрес.</li>
+                        <li class="mb-0">Укажите номера для WhatsApp/Telegram — они используются для быстрых кнопок на сайте.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="surface-2 p-4 h-100">
+                    <div class="fw-bold mb-2">Чеклист после добавления</div>
+                    <ul class="text-muted mb-0">
+                        <li class="mb-2">Проверьте список брендов: <a class="link-accent-hover" href="{% url 'catalog:brand_list' %}" target="_blank" rel="noopener noreferrer">/brands/</a></li>
+                        <li class="mb-2">Проверьте страницу бренда: <span class="fw-bold">/brands/&lt;slug&gt;/</span> (пример: <a class="link-accent-hover" href="{% url 'catalog:brand_detail' slug='shacman' %}" target="_blank" rel="noopener noreferrer">/brands/shacman/</a>)</li>
+                        <li class="mb-2">Проверьте каталог по бренду: <a class="link-accent-hover" href="{% url 'catalog:catalog_series' slug='shacman' %}" target="_blank" rel="noopener noreferrer">/catalog/series/shacman/</a></li>
+                        <li class="mb-0">Проверьте карточку товара: <span class="fw-bold">/product/&lt;slug&gt;/</span> (из админки можно открыть через кнопку «View on site», если доступна).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-dim my-4">
+
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div class="text-muted">
+                Если что-то не отображается — проверьте <span class="fw-bold">Published</span> у товара и правильность slug.
+            </div>
+            <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}" target="_blank" rel="noopener noreferrer">Проверить форму КП</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

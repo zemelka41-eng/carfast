@@ -1,0 +1,382 @@
+/* CARFAST Admin theme (Django admin) — dark surfaces + red accent */
+
+/* Override Django admin CSS variables for both theme modes.
+   Django defines variables on :root and html[data-theme="light"] / html[data-theme="dark"].
+   We match that specificity to ensure our tokens always win. */
+:root,
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --primary: var(--accent);
+  --secondary: var(--surface);
+  --primary-fg: var(--text);
+
+  --body-fg: var(--text);
+  --body-bg: var(--bg);
+  --body-quiet-color: var(--muted);
+  --body-medium-color: rgba(var(--text-rgb), 0.86);
+  --body-loud-color: var(--text);
+
+  --header-color: var(--text);
+  --header-branding-color: var(--text);
+  --header-bg: var(--surface);
+  --header-link-color: var(--text);
+
+  --breadcrumbs-fg: var(--muted);
+  --breadcrumbs-link-fg: var(--text);
+  --breadcrumbs-bg: var(--surface);
+
+  --link-fg: var(--link);
+  --link-hover-color: var(--accent);
+  --link-selected-fg: var(--accent);
+
+  --hairline-color: var(--border-12);
+  --border-color: var(--border-12);
+
+  --darkened-bg: var(--surface-2);
+  --selected-bg: rgba(255, 255, 255, 0.06);
+  --selected-row: var(--accent-12);
+
+  --button-fg: var(--text);
+  --button-bg: var(--surface-2);
+  --button-hover-bg: var(--surface-2);
+
+  --default-button-bg: var(--accent);
+  --default-button-hover-bg: var(--accent);
+
+  --close-button-bg: var(--surface-2);
+  --close-button-hover-bg: var(--surface-2);
+
+  --delete-button-bg: var(--accent);
+  --delete-button-hover-bg: var(--accent);
+
+  --object-tools-fg: var(--text);
+  --object-tools-bg: var(--surface-2);
+  --object-tools-hover-bg: var(--surface-2);
+}
+
+/* Layout */
+body {
+  background: var(--bg);
+}
+
+#header {
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+#branding #site-name a {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#user-tools a,
+#user-tools button {
+  color: var(--muted);
+}
+
+#user-tools a:hover,
+#user-tools a:focus,
+#user-tools button:hover,
+#user-tools button:focus {
+  color: var(--text);
+}
+
+#logout-form button {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* Panels / cards */
+.module,
+fieldset.module,
+.inline-group,
+#changelist-filter,
+.submit-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.submit-row {
+  box-shadow: none;
+}
+
+/* Tables */
+#result_list,
+#result_list thead th,
+#result_list tbody td,
+#result_list tbody th {
+  border-color: var(--border);
+}
+
+#result_list tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Forms */
+:where(
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    input[type="tel"],
+    input[type="number"],
+    textarea,
+    select
+  ) {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-control);
+}
+
+:where(
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    input[type="tel"],
+    input[type="number"],
+    textarea,
+    select
+  ):focus {
+  border-color: var(--accent-75);
+  box-shadow: 0 0 0 3px var(--accent-22);
+  outline: none;
+}
+
+/* Buttons */
+:where(.button, a.button, input[type="submit"], input[type="button"], button) {
+  border-radius: var(--radius-control);
+}
+
+.button,
+a.button,
+input[type="submit"],
+input[type="button"] {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.button:hover,
+.button:focus,
+a.button:hover,
+a.button:focus,
+input[type="submit"]:hover,
+input[type="submit"]:focus,
+input[type="button"]:hover,
+input[type="button"]:focus {
+  border-color: var(--accent-55);
+  outline: none;
+}
+
+.button.default,
+input[type="submit"].default,
+.submit-row input.default {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.button.default:hover,
+.button.default:focus,
+input[type="submit"].default:hover,
+input[type="submit"].default:focus,
+.submit-row input.default:hover,
+.submit-row input.default:focus {
+  filter: brightness(1.06);
+}
+
+.button.default:active,
+input[type="submit"].default:active,
+.submit-row input.default:active {
+  filter: brightness(0.92);
+}
+
+/* Delete / close links in submit row (e.g. delete confirmation) */
+.submit-row a.deletelink {
+  border-radius: var(--radius-control);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.submit-row a.deletelink:hover,
+.submit-row a.deletelink:focus {
+  filter: brightness(1.06);
+}
+
+.submit-row a.closelink {
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.submit-row a.closelink:hover,
+.submit-row a.closelink:focus {
+  border-color: var(--accent-55);
+}
+
+/* Object tools (top-right actions) */
+.object-tools a {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.object-tools a:hover,
+.object-tools a:focus {
+  border-color: var(--accent-55);
+}
+
+/* Messages */
+ul.messagelist li {
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
+}
+
+/* Login page */
+body.login {
+  background: radial-gradient(1200px 600px at 50% -100px, rgba(var(--accent-rgb), 0.25), transparent 60%),
+    var(--bg);
+}
+
+.carfast-login {
+  min-height: calc(100vh - 140px);
+  display: grid;
+  place-items: center;
+  padding: 40px 16px;
+}
+
+.carfast-login__card {
+  width: min(520px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-card) + 2px);
+  box-shadow: var(--shadow);
+  padding: 28px 26px;
+}
+
+.carfast-login__brand {
+  margin-bottom: 18px;
+}
+
+.carfast-login__title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.carfast-login__subtitle {
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+.carfast-login__form .form-row {
+  margin: 0 0 14px;
+}
+
+.carfast-login__form label {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.carfast-login__form input[type="text"],
+.carfast-login__form input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.carfast-btn-primary {
+  width: 100%;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--text) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em;
+  padding: 12px 16px !important;
+  border-radius: var(--radius-control) !important;
+}
+
+.carfast-btn-primary:hover,
+.carfast-btn-primary:focus {
+  filter: brightness(1.06);
+}
+
+.carfast-btn-primary:active {
+  filter: brightness(0.92);
+}
+
+/* Admin dashboard (index) */
+.carfast-dashboard h2 {
+  margin-bottom: 10px;
+}
+
+.carfast-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.carfast-metric {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+}
+
+.carfast-metric__label {
+  color: var(--muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+}
+
+.carfast-metric__value {
+  margin-top: 6px;
+  font-weight: 900;
+  font-size: 28px;
+  color: var(--accent);
+}
+
+.carfast-dashboard__actions {
+  margin-top: 14px;
+}
+
+.carfast-dashboard__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.carfast-dashboard__hint {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.carfast-dashboard__hint code {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-12);
+  border-radius: 10px;
+  padding: 2px 8px;
+  color: var(--text);
+}
+
+

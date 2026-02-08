@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-5">
+                <h1 class="display-6 fw-bold mb-2">Получить коммерческое предложение</h1>
+                <div class="text-muted">
+                    {% if selected_series and selected_series.slug == "shacman" %}
+                        CARFAST — официальный дилер SHACMAN. Подготовим КП под вашу задачу и бюджет.
+                    {% endif %}
+                </div>
+
+                {% if form.instance.product %}
+                    <div class="mt-3">
+                        <span class="badge badge-accent">Заявка по позиции: {{ form.instance.product }}</span>
+                    </div>
+                {% endif %}
+
+                <hr class="hr-dim my-4">
+
+                <div class="card-dark p-3">
+                    <div class="fw-bold mb-2">Лизинг</div>
+                    <div class="text-muted small">
+                        Подберём лизинговую программу под задачу и бюджет.
+                    </div>
+                    <a class="btn btn-ghost mt-3" href="#lead-form">Запросить условия лизинга</a>
+                </div>
+            </div>
+
+            <div class="col-lg-7" id="lead-form">
+                <div class="surface-2 p-4">
+                    <div class="fw-bold mb-3">Оставьте заявку</div>
+                    <form method="post" class="d-grid gap-3">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+
+                        {{ form.product }}
+                        {{ form.source }}
+                        {{ form.honeypot }}
+                        
+                        {# Hidden UTM fields from URL #}
+                        {% if request.GET.utm_source %}<input type="hidden" name="utm_source" value="{{ request.GET.utm_source }}">{% endif %}
+                        {% if request.GET.utm_medium %}<input type="hidden" name="utm_medium" value="{{ request.GET.utm_medium }}">{% endif %}
+                        {% if request.GET.utm_campaign %}<input type="hidden" name="utm_campaign" value="{{ request.GET.utm_campaign }}">{% endif %}
+                        {% if request.GET.utm_term %}<input type="hidden" name="utm_term" value="{{ request.GET.utm_term }}">{% endif %}
+                        {% if request.GET.utm_content %}<input type="hidden" name="utm_content" value="{{ request.GET.utm_content }}">{% endif %}
+
+                        <div>
+                            {{ form.name.label_tag }}{{ form.name }}
+                            {{ form.name.errors }}
+                        </div>
+                        <div>
+                            {{ form.phone.label_tag }}{{ form.phone }}
+                            {{ form.phone.errors }}
+                        </div>
+                        <div>
+                            {{ form.email.label_tag }}{{ form.email }}
+                            {{ form.email.errors }}
+                        </div>
+                        <div>
+                            {{ form.message.label_tag }}{{ form.message }}
+                            {{ form.message.errors }}
+                        </div>
+
+                        <button class="btn btn-accent btn-lg w-100" type="submit">Отправить заявку</button>
+                        {% include "partials/_privacy_consent.html" %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

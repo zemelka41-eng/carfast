@@ -1,0 +1,463 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load catalog_format %}
+{% load static %}
+
+{% block title %}{{ series.name }} — CARFAST{% endblock %}
+{% block meta_description %}История бренда {{ series.name }} и техника в наличии и под заказ.{% endblock %}
+
+{% block body_class %}has-mobile-sticky-cta{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="row g-4 align-items-end">
+            <div class="col-lg-8">
+                <div class="text-uppercase small text-muted mb-2">Бренд</div>
+                <h1 class="display-5 fw-bold mb-2">{{ series.name }}</h1>
+                <div class="text-muted mb-3">
+                    {% if series.slug|lower == "shacman" %}
+                        Официальный дилер SHACMAN. Подберём технику и комплектацию под вашу задачу.
+                    {% else %}
+                        Поставка и продажа техники {{ series.name }}. Подберём комплектацию, сроки и условия поставки.
+                    {% endif %}
+                </div>
+                {% if series.slug|lower == "shacman" %}
+                    <div class="surface surface--tight mb-3">
+                        <div class="fw-bold mb-1">Официальный дилер SHACMAN</div>
+                        <div class="small text-muted">
+                            Подтверждающие документы предоставим по запросу.
+                            <a class="link-muted link-accent-hover" href="{% url 'catalog:contacts' %}">Подтверждение статуса</a>
+                        </div>
+                        <!-- При наличии сертификата: /media/docs/shacman-certificate.pdf -->
+                    </div>
+                {% endif %}
+
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <a class="btn btn-accent btn-lg" href="{% url 'catalog:lead_page' %}?source=brand_{{ series.slug|lower }}">Получить КП</a>
+                    <button class="btn btn-ghost btn-lg"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#brandCategories"
+                            aria-expanded="false"
+                            aria-controls="brandCategories">
+                        Смотреть технику бренда
+                    </button>
+
+                    <div class="d-none d-md-flex gap-2 ms-md-1">
+                        <a class="btn btn-ghost btn-lg btn-icon"
+                           href="{{ contact_whatsapp_href }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           aria-label="WhatsApp">
+                            <span class="visually-hidden">WhatsApp</span>
+                            <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M19.11 17.37c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.6.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.6.07-.27-.14-1.16-.43-2.21-1.36-.82-.73-1.37-1.63-1.53-1.9-.16-.27-.02-.42.12-.56.12-.12.27-.32.4-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.6-1.46-.82-2-.21-.51-.43-.44-.6-.45h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27 0 1.34.98 2.63 1.11 2.82.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.56.58.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.28.23-.63.23-1.17.16-1.28-.07-.11-.25-.18-.52-.32ZM16.02 27.84h-.01c-1.98 0-3.92-.53-5.62-1.53l-.4-.24-4.16 1.09 1.11-4.06-.26-.42A11.77 11.77 0 0 1 4.25 16c0-6.49 5.28-11.77 11.77-11.77 3.15 0 6.11 1.23 8.34 3.45A11.72 11.72 0 0 1 27.8 16c0 6.49-5.29 11.84-11.78 11.84Zm9.98-20.18A14.02 14.02 0 0 0 16.02 2C8.28 2 2 8.28 2 16c0 2.47.65 4.88 1.88 7.01L2 30l7.17-1.88A13.94 13.94 0 0 0 16.02 30C23.72 30 30 23.72 30 16c0-3.74-1.46-7.26-4-9.34Z"/>
+                            </svg>
+                        </a>
+                        <a class="btn btn-ghost btn-lg btn-icon"
+                           href="{{ contact_telegram_href }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           aria-label="Telegram">
+                            <span class="visually-hidden">Telegram</span>
+                            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M9.73 15.24 9.5 19.1c.39 0 .56-.17.76-.37l1.82-1.75 3.77 2.76c.69.38 1.18.18 1.35-.64l2.45-11.52c.21-1.01-.36-1.41-1.03-1.16L4.21 10.1c-.97.38-.96.92-.17 1.17l3.72 1.16 8.63-5.45c.41-.27.78-.12.47.15"/>
+                            </svg>
+                        </a>
+                        {% if contact_max_href %}
+                            <a class="btn btn-ghost btn-lg btn-icon"
+                               href="{{ contact_max_href }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label="Написать в MAX">
+                                <span aria-hidden="true" class="small fw-bold">MAX</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="d-flex flex-column align-items-start align-items-lg-end gap-3">
+                    <div>
+                        {% if series.slug|lower == "shacman" %}
+                            <span class="badge badge-accent">Официальный дилер</span>
+                        {% else %}
+                            <span class="badge">Поставка и продажа</span>
+                        {% endif %}
+                    </div>
+                    {% if series.logo %}
+                        <div class="brand-logo-plate">
+                            <img class="brand-logo" src="{{ series.logo.url }}" alt="{{ series.logo_alt_ru|default:series.name|clean_text }}" loading="lazy">
+                        </div>
+                    {% elif brand_logo_static %}
+                        <div class="brand-logo-plate">
+                            <img class="brand-logo brand-logo--mono" src="{% static brand_logo_static %}" alt="{{ series.name }} логотип" loading="lazy">
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="collapse mt-4" id="brandCategories">
+            <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2 mb-3">
+                <div>
+                    <div class="text-uppercase small text-muted mb-1">Категории техники</div>
+                    <div class="text-muted">Выберите категорию — откроем каталог бренда.</div>
+                </div>
+                <a class="btn btn-ghost btn-sm" href="{% url 'catalog:catalog_series' slug=series.slug %}">Все позиции</a>
+            </div>
+
+            <div class="row g-3">
+                {% for c in nav_category_list %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a class="card-dark h-100 d-block text-decoration-none category-card {% if c.cover_image %}category-card--has-cover{% endif %}"
+                           href="{% url 'catalog:catalog_series_category' series_slug=series.slug category_slug=c.slug %}">
+                            {% if c.cover_image %}
+                                <img class="category-card__img" src="{{ c.cover_image.url }}" alt="{{ c.cover_alt_ru|default:c.name|clean_text }}" loading="lazy">
+                                <div class="category-card__overlay" aria-hidden="true"></div>
+                            {% endif %}
+                            <div class="category-card__content p-3">
+                                <div class="fw-bold">{{ c.name }}</div>
+                                <div class="small category-card__hint mt-2">Смотреть позиции</div>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="surface">Категории скоро появятся.</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="row g-3">
+        {% if series.slug|lower == "shacman" %}
+            <div class="col-6 col-lg-4">
+                <button type="button"
+                        class="card-dark h-100 p-3 brand-benefit-card"
+                        data-bs-toggle="modal"
+                        data-bs-target="#brandBenefitModal"
+                        data-title="Официальный дилер SHACMAN">
+                    <div class="small text-accent fw-bold mb-2">Доверие</div>
+                    <div class="fw-bold">Официальный дилер SHACMAN</div>
+                    <div class="small text-muted mt-2">Подтверждающие документы предоставим по запросу.</div>
+                </button>
+            </div>
+        {% endif %}
+        <div class="col-6 col-lg-4">
+            <button type="button"
+                    class="card-dark h-100 p-3 brand-benefit-card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#brandBenefitModal"
+                    data-title="Лизинг">
+                <div class="small text-accent fw-bold mb-2">Финансы</div>
+                <div class="fw-bold">Лизинг</div>
+                <div class="small text-muted mt-2">Подберём программу и подготовим пакет документов.</div>
+            </button>
+        </div>
+        <div class="col-6 col-lg-4">
+            <button type="button"
+                    class="card-dark h-100 p-3 brand-benefit-card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#brandBenefitModal"
+                    data-title="Доставка по РФ">
+                <div class="small text-accent fw-bold mb-2">Логистика</div>
+                <div class="fw-bold">Доставка по РФ</div>
+                <div class="small text-muted mt-2">Организуем поставку в ваш регион и сроки.</div>
+            </button>
+        </div>
+        <div class="col-6 col-lg-4">
+            <button type="button"
+                    class="card-dark h-100 p-3 brand-benefit-card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#brandBenefitModal"
+                    data-title="Сервис и запчасти">
+                <div class="small text-accent fw-bold mb-2">Поддержка</div>
+                <div class="fw-bold">Сервис и запчасти</div>
+                <div class="small text-muted mt-2">Сопровождение после покупки и консультации.</div>
+            </button>
+        </div>
+        <div class="col-6 col-lg-4">
+            <button type="button"
+                    class="card-dark h-100 p-3 brand-benefit-card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#brandBenefitModal"
+                    data-title="Комплектация под задачу">
+                <div class="small text-accent fw-bold mb-2">Подбор</div>
+                <div class="fw-bold">Комплектация под задачу</div>
+                <div class="small text-muted mt-2">Учитываем условия работы, бюджет и сроки.</div>
+            </button>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="brandBenefitModal" tabindex="-1" aria-labelledby="brandBenefitModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="brandBenefitModalLabel">Преимущество</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body" data-brand-benefit-body>
+                Подскажем по наличию, комплектациям и срокам поставки. Подберём технику под задачу и подготовим коммерческое предложение.
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="mb-5">
+    <div class="surface p-4 p-lg-5">
+        <h2 class="h3 mb-3">История бренда</h2>
+        <div class="text-muted">
+            {% if series.history %}
+                {{ series.history|linebreaksbr }}
+            {% elif series.description_ru %}
+                {{ series.description_ru|clean_text|safe }}
+            {% else %}
+                <p class="mb-3">
+                    {{ series.name }} — бренд грузовой техники и решений для задач, где важны надёжность, удобство эксплуатации и подбор комплектации под условия работы.
+                    В линейке встречаются шасси, самосвалы, тягачи и другие типы техники — в зависимости от запроса.
+                </p>
+                <p class="mb-0">
+                    CARFAST помогает подобрать технику {{ series.name }} под проект: комплектацию, сроки поставки, подготовку документов и сопровождение.
+                    Для запроса коммерческого предложения оставьте заявку — мы ответим быстро и по делу.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="d-flex align-items-end justify-content-between gap-3 mb-3">
+        <div>
+            <h2 class="h3 mb-1">Популярные позиции {{ series.name }}</h2>
+            <div class="text-muted">Подборка техники бренда: в наличии и под заказ.</div>
+        </div>
+        {% if popular_products %}
+            <a class="btn btn-ghost" href="{% url 'catalog:catalog_series' slug=series.slug %}">Смотреть все</a>
+        {% endif %}
+    </div>
+
+    {% if popular_products %}
+        <div class="row g-3 align-items-stretch">
+            {% for product in popular_products %}
+                <div class="col-md-6 col-lg-4 d-flex">
+                    {% with kp_source="brand_"|add:series.slug|lower %}
+                        {% include "catalog/_product_card.html" with product=product variant="brand" show_kp_button=1 kp_source=kp_source %}
+                    {% endwith %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="surface p-4 p-lg-5">
+            <div class="h3 mb-1">Нужна техника {{ series.name }}?</div>
+            <div class="text-muted mb-3">Позиции ещё не добавлены в каталог — подберём и подготовим коммерческое предложение под вашу задачу.</div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-accent btn-lg" href="{% url 'catalog:lead_page' %}?source=brand_{{ series.slug|lower }}">Получить КП</a>
+                <a class="btn btn-ghost btn-lg" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a class="btn btn-ghost btn-lg" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer">Telegram</a>
+                {% if contact_max_href %}
+                    <a class="btn btn-ghost btn-lg" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer">MAX</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<section class="mb-5">
+    <div class="d-flex align-items-end justify-content-between gap-3 mb-3">
+        <div>
+            <h2 class="h3 mb-1">FAQ по {{ series.name }}</h2>
+            <div class="text-muted">Короткие ответы на частые вопросы — можно быстро обновлять прямо в шаблоне.</div>
+        </div>
+    </div>
+
+    <div class="accordion" id="brandFaq">
+        {% if series.slug|lower == "shacman" %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOfficial">
+                        {% if series.slug|lower == "shacman" %}
+                            CARFAST — партнёр по технике SHACMAN?
+                        {% endif %}
+                    </button>
+                </h2>
+                <div id="faqOfficial" class="accordion-collapse collapse show" data-bs-parent="#brandFaq">
+                    <div class="accordion-body">
+                        {% if series.slug|lower == "shacman" %}
+                            Да. По бренду SHACMAN работаем с подтверждённым официальным статусом. По другим брендам — поставка и продажа.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button {% if series.slug|lower == 'shacman' %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#faqModels">
+                    Какие модели {{ series.name }} доступны сейчас?
+                </button>
+            </h2>
+            <div id="faqModels" class="accordion-collapse collapse {% if series.slug|lower != 'shacman' %}show{% endif %}" data-bs-parent="#brandFaq">
+                <div class="accordion-body">
+                    Актуальные позиции смотрите в каталоге бренда. Если нужной модели нет — оставьте заявку, подберём комплектацию и пришлём КП.
+                    <div class="mt-3 d-flex flex-wrap gap-2">
+                        <a class="btn btn-ghost btn-sm" href="{% url 'catalog:catalog_series' slug=series.slug %}">Открыть каталог</a>
+                        <a class="btn btn-accent btn-sm" href="{% url 'catalog:lead_page' %}?source=brand_{{ series.slug|lower }}">Получить КП</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqKp">
+                    Как быстро вы готовите КП?
+                </button>
+            </h2>
+            <div id="faqKp" class="accordion-collapse collapse" data-bs-parent="#brandFaq">
+                <div class="accordion-body">
+                    Обычно — в течение рабочего дня. Для ускорения укажите: тип техники, условия работы, желаемую комплектацию и регион доставки.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqLeasing">
+                    Можно купить в лизинг?
+                </button>
+            </h2>
+            <div id="faqLeasing" class="accordion-collapse collapse" data-bs-parent="#brandFaq">
+                <div class="accordion-body">
+                    Да. Поможем подобрать лизинговую программу и подготовить документы. Оставьте заявку — подскажем варианты по срокам и платежам.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqDelivery">
+                    Доставка по регионам РФ — как это работает?
+                </button>
+            </h2>
+            <div id="faqDelivery" class="accordion-collapse collapse" data-bs-parent="#brandFaq">
+                <div class="accordion-body">
+                    Организуем доставку до вашего города. Срок зависит от наличия, маршрута и типа техники. Рассчитаем логистику в составе КП.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqDocs">
+                    Какие документы и условия гарантии?
+                </button>
+            </h2>
+            <div id="faqDocs" class="accordion-collapse collapse" data-bs-parent="#brandFaq">
+                <div class="accordion-body">
+                    Подготовим комплект документов под сделку (договор, счёт, спецификация).
+                    {% if series.slug|lower == "shacman" %}
+                        {% if series.slug|lower == "shacman" %}
+                            По SHACMAN работаем с официальным статусом.
+                        {% endif %}
+                    {% else %}
+                        По {{ series.name }} работаем в формате поставки и продажи.
+                    {% endif %}
+                    Условия гарантии и сопровождения фиксируем в договоре.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqOptions">
+                    Поможете с выбором комплектации?
+                </button>
+            </h2>
+            <div id="faqOptions" class="accordion-collapse collapse" data-bs-parent="#brandFaq">
+                <div class="accordion-body">
+                    Да. Подберём оптимальную комплектацию под условия работы (грунт/карьер/трасса), нагрузку и бюджет. Можно обсудить в WhatsApp или Telegram.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="surface p-4 p-lg-5 border-accent d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+        <div>
+            <div class="h3 mb-1">Нужно КП по {{ series.name }}?</div>
+            <div class="text-muted">Подберём технику и комплектацию под задачу. Ответим быстро.</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-accent btn-lg" href="{% url 'catalog:lead_page' %}?source=brand_{{ series.slug|lower }}">Получить КП</a>
+            <a class="btn btn-ghost btn-lg" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a class="btn btn-ghost btn-lg" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer">Telegram</a>
+            {% if contact_max_href %}
+                <a class="btn btn-ghost btn-lg" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer">MAX</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<div class="mobile-sticky-cta d-md-none" role="region" aria-label="Быстрый контакт">
+    <div class="container">
+        <div class="d-flex gap-2">
+            <a class="btn btn-accent flex-grow-1" href="{% url 'catalog:lead_page' %}?source=brand_{{ series.slug|lower }}">КП</a>
+            <a class="btn btn-ghost btn-icon" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                <span class="visually-hidden">WhatsApp</span>
+                <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M19.11 17.37c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.6.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.6.07-.27-.14-1.16-.43-2.21-1.36-.82-.73-1.37-1.63-1.53-1.9-.16-.27-.02-.42.12-.56.12-.12.27-.32.4-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.6-1.46-.82-2-.21-.51-.43-.44-.6-.45h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27 0 1.34.98 2.63 1.11 2.82.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.56.58.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.28.23-.63.23-1.17.16-1.28-.07-.11-.25-.18-.52-.32ZM16.02 27.84h-.01c-1.98 0-3.92-.53-5.62-1.53l-.4-.24-4.16 1.09 1.11-4.06-.26-.42A11.77 11.77 0 0 1 4.25 16c0-6.49 5.28-11.77 11.77-11.77 3.15 0 6.11 1.23 8.34 3.45A11.72 11.72 0 0 1 27.8 16c0 6.49-5.29 11.84-11.78 11.84Zm9.98-20.18A14.02 14.02 0 0 0 16.02 2C8.28 2 2 8.28 2 16c0 2.47.65 4.88 1.88 7.01L2 30l7.17-1.88A13.94 13.94 0 0 0 16.02 30C23.72 30 30 23.72 30 16c0-3.74-1.46-7.26-4-9.34Z"/>
+                </svg>
+            </a>
+            <a class="btn btn-ghost btn-icon" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                <span class="visually-hidden">Telegram</span>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M9.73 15.24 9.5 19.1c.39 0 .56-.17.76-.37l1.82-1.75 3.77 2.76c.69.38 1.18.18 1.35-.64l2.45-11.52c.21-1.01-.36-1.41-1.03-1.16L4.21 10.1c-.97.38-.96.92-.17 1.17l3.72 1.16 8.63-5.45c.41-.27.78-.12.47.15"/>
+                </svg>
+            </a>
+            {% if contact_max_href %}
+                <a class="btn btn-ghost btn-icon" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer" aria-label="Написать в MAX">
+                    <span aria-hidden="true" class="small fw-bold">MAX</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(() => {
+  const categories = document.getElementById("brandCategories");
+  if (categories) {
+    categories.addEventListener("shown.bs.collapse", () => {
+      const header = document.querySelector(".site-header");
+      const offset = (header ? header.offsetHeight : 0) + 16;
+      const top = categories.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: "smooth" });
+    });
+  }
+
+  const modalEl = document.getElementById("brandBenefitModal");
+  if (modalEl) {
+    modalEl.addEventListener("show.bs.modal", (event) => {
+      const trigger = event.relatedTarget;
+      const title = (trigger && trigger.dataset && trigger.dataset.title) ? trigger.dataset.title : "Преимущество";
+      const titleEl = modalEl.querySelector(".modal-title");
+      const bodyEl = modalEl.querySelector("[data-brand-benefit-body]");
+      if (titleEl) titleEl.textContent = title;
+      const text = (trigger && trigger.dataset && trigger.dataset.text) ? trigger.dataset.text : "";
+      if (bodyEl && text) bodyEl.textContent = text;
+    });
+  }
+})();
+</script>
+{% endblock %}

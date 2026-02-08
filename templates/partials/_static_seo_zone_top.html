@@ -1,0 +1,7 @@
+{% comment %}
+Открывает контейнер #static-seo-zone и выводит SEO-интро над основным контентом (leasing, used, service, parts, payment-delivery).
+{% endcomment %}
+<div id="static-seo-zone" data-seo-block="1">
+{% if static_seo_intro_html %}
+<div class="static-seo-intro mb-4 surface p-4 p-lg-5">{{ static_seo_intro_html|safe }}</div>
+{% endif %}

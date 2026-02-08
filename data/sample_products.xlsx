@@ -1,0 +1,23 @@
+Это пример файла. Для реального XLSX создайте таблицу с колонками:
+sku,slug,series,category,model_name_ru,model_name_en,short_description_ru,short_description_en,price,availability,image
+Сохраните как XLSX и положите в data/sample_products.xlsx.
+# This is a placeholder for the Excel file structure
+# In a real scenario, you would create an actual .xlsx file using openpyxl or Excel
+# Below is the expected structure:
+
+# Columns (first row):
+# sku, slug, series, category, model_name_ru, model_name_en, short_description_ru, short_description_en, 
+# description_ru, description_en, price, availability, engine_model, power_hp, wheel_formula, 
+# payload_tons, dimensions, options, image_1, image_2, image_3, seo_title_ru, seo_meta_description_ru, 
+# seo_title_en, seo_meta_description_en, published
+
+# Example rows:
+# SHAC-X3000-001, shacman-x3000-truck, x3000, trucks, SHACMAN X3000 Грузовик, SHACMAN X3000 Truck, 
+# Современный грузовой автомобиль, Modern truck, Полное описание..., Full description..., 
+# 3500000, in_stock, WP12.430E50, 430, 6x4, 25.00, 7000x2500x3500, {}, product1_1.jpg, product1_2.jpg, 
+# SHACMAN X3000 - Грузовой автомобиль, Описание для SEO, SHACMAN X3000 - Truck, SEO description, True
+
+# Note: Create actual Excel file using:
+# python -c "from openpyxl import Workbook; wb = Workbook(); ws = wb.active; 
+# ws.append(['sku', 'slug', ...]); wb.save('data/sample_products.xlsx')"
+

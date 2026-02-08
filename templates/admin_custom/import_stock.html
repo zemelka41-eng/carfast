@@ -1,0 +1,83 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+  <h1>{{ title }}</h1>
+
+  <div style="max-width: 900px;">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <fieldset class="module aligned">
+        {{ form.as_p }}
+      </fieldset>
+
+      <div class="submit-row">
+        <input type="submit" value="Импортировать" class="default">
+      </div>
+    </form>
+
+    {% if report %}
+      <h2>Отчёт</h2>
+
+      <div class="module">
+        <p><strong>Файл:</strong> {{ report.file_name }}</p>
+        <p><strong>Лист:</strong> {{ report.sheet_name }}</p>
+        <p><strong>Batch token:</strong> {{ report.batch_token }}</p>
+        <p>
+          <strong>Строки:</strong>
+          parsed={{ report.parsed_rows }}, skipped={{ report.skipped_rows }}, errors={{ report.errors|length|default:0 }}
+        </p>
+      </div>
+
+      <div class="module">
+        <h3>Создано</h3>
+        <ul>
+          <li>Бренды (Series): {{ report.created_series }}</li>
+          <li>Категории (Category): {{ report.created_categories }}</li>
+          <li>Города (City): {{ report.created_cities }}</li>
+          <li>Карточки (Product): {{ report.created_products }}</li>
+          <li>Предложения (Offer): {{ report.created_offers }}</li>
+        </ul>
+
+        <h3>Обновлено</h3>
+        <ul>
+          <li>Карточки (Product): {{ report.updated_products }}</li>
+          <li>Предложения (Offer): {{ report.updated_offers }}</li>
+        </ul>
+
+        {% if report.deactivated_offers %}
+          <h3>Деактивировано</h3>
+          <ul>
+            <li>Предложения (Offer): {{ report.deactivated_offers }}</li>
+          </ul>
+        {% endif %}
+      </div>
+
+      {% if report.errors %}
+        <div class="module">
+          <h3>Ошибки (первые 200)</h3>
+          <table class="adminlist">
+            <thead>
+              <tr>
+                <th>Строка</th>
+                <th>Сообщение</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for err in report.errors|slice:":200" %}
+                <tr>
+                  <td>{{ err.row }}</td>
+                  <td>{{ err.message }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% if report.errors|length > 200 %}
+            <p class="help">Показаны первые 200 ошибок.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

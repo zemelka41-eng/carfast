@@ -1,0 +1,38 @@
+<div class="card-dark h-100 p-3 p-lg-4 hero-quick-actions">
+    <div class="h5 mb-3">Рассчитаем под задачу</div>
+
+    <div class="d-flex flex-column gap-2">
+        <a class="hero-quick-actions__tile d-flex gap-3 text-decoration-none p-3" href="{% url 'catalog:catalog_in_stock' %}">
+            <span class="hero-quick-actions__icon" aria-hidden="true" data-icon="⚡"></span>
+            <span>
+                <span class="fw-bold d-block">Техника в наличии</span>
+                <span class="small text-muted d-block">Склад и ближайшие поставки без ожидания.</span>
+            </span>
+        </a>
+        <a class="hero-quick-actions__tile d-flex gap-3 text-decoration-none p-3" href="{% url 'catalog:lead_page' %}?intent=equipment">
+            <span class="hero-quick-actions__icon" aria-hidden="true" data-icon="✓"></span>
+            <span>
+                <span class="fw-bold d-block">Подобрать комплектацию</span>
+                <span class="small text-muted d-block">Под задачу, бюджет и условия работы.</span>
+            </span>
+        </a>
+        <a class="hero-quick-actions__tile d-flex gap-3 text-decoration-none p-3" href="{% url 'catalog:leasing' %}">
+            <span class="hero-quick-actions__icon" aria-hidden="true" data-icon="₽"></span>
+            <span>
+                <span class="fw-bold d-block">Рассчитать лизинг</span>
+                <span class="small text-muted d-block">Предварительный расчёт и пакет документов.</span>
+            </span>
+        </a>
+    </div>
+
+    <div class="small text-muted mt-3">Ответим за 15 минут в рабочее время.</div>
+
+    <div class="d-flex align-items-center gap-2 mt-3">
+        <a class="btn btn-ghost btn-sm hero-quick-actions__icon-btn" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer" aria-label="Написать в WhatsApp">WA</a>
+        <a class="btn btn-ghost btn-sm hero-quick-actions__icon-btn" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">TG</a>
+        {% if contact_max_href %}
+            <a class="btn btn-ghost btn-sm hero-quick-actions__icon-btn" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer" aria-label="Написать в MAX">MAX</a>
+        {% endif %}
+        <a class="btn btn-ghost btn-sm" href="{{ contact_phone_href }}">Позвонить</a>
+    </div>
+</div>

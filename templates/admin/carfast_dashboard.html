@@ -1,0 +1,53 @@
+{% load i18n %}
+
+<div class="module carfast-dashboard">
+  <h2>{% translate "Дашборд" %}</h2>
+
+  <div class="carfast-dashboard__grid">
+    <div class="carfast-metric">
+      <div class="carfast-metric__label">Новые заявки (7 дней)</div>
+      <div class="carfast-metric__value">
+        {% if leads_new_7d is not None %}{{ leads_new_7d }}{% else %}—{% endif %}
+      </div>
+    </div>
+
+    <div class="carfast-metric">
+      <div class="carfast-metric__label">Заявки в обработке</div>
+      <div class="carfast-metric__value">
+        {% if leads_in_progress is not None %}{{ leads_in_progress }}{% else %}—{% endif %}
+      </div>
+    </div>
+
+    <div class="carfast-metric">
+      <div class="carfast-metric__label">Техника</div>
+      <div class="carfast-metric__value">
+        {% if products_total is not None %}{{ products_total }}{% else %}—{% endif %}
+      </div>
+    </div>
+
+    <div class="carfast-metric">
+      <div class="carfast-metric__label">Предложения / остатки</div>
+      <div class="carfast-metric__value">
+        {% if offers_total is not None %}{{ offers_total }}{% else %}—{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="carfast-dashboard__actions">
+    <h3>{% translate "Быстрые ссылки" %}</h3>
+    <div class="carfast-dashboard__buttons">
+      {% for link in quick_links %}
+        <a class="button{% if link.primary %} default{% endif %}" href="{{ link.url }}">{{ link.label }}</a>
+      {% empty %}
+        <p class="help">Недостаточно прав для быстрых действий.</p>
+      {% endfor %}
+    </div>
+
+    <p class="carfast-dashboard__hint">
+      Гайд по наполнению: <code>{{ inventory_guide_path }}</code>
+      {% if guide_url %}
+        · <a href="{{ guide_url }}">Открыть краткую инструкцию</a>
+      {% endif %}
+    </p>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+# Template systemd unit for CARFST (gunicorn)
+# Copy to: /etc/systemd/system/gunicorn_carfst.service
+# Then: systemctl daemon-reload && systemctl enable --now gunicorn_carfst
+
+[Unit]
+Description=Gunicorn daemon for CARFST (carfst.ru)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+
+# Project directory
+WorkingDirectory=/var/www/carfst
+
+# Your Django env vars (.env) live here
+EnvironmentFile=/var/www/carfst/.env
+
+# Defaults (can be overridden in the EnvironmentFile)
+Environment="GUNICORN_WORKERS=3"
+Environment="GUNICORN_TIMEOUT=120"
+
+ExecStart=/var/www/carfst/.venv/bin/gunicorn carfst_site.wsgi:application --bind 127.0.0.1:8000 --workers $GUNICORN_WORKERS --timeout $GUNICORN_TIMEOUT --access-logfile - --error-logfile - --log-level info
+
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

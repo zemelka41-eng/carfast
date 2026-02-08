@@ -1,0 +1,69 @@
+{% load catalog_format %}
+{% load static %}
+{% comment %}Reusable product card component with fixed heights for consistent alignment in grid listings{% endcomment %}
+
+<div class="card-dark w-100 h-100 d-flex flex-column overflow-hidden product-card product-card-link"
+     role="link"
+     tabindex="0"
+     data-href="{{ product.get_absolute_url }}">
+    <div class="product-card__media position-relative">
+        {% if product.main_image %}
+            <img src="{{ product.main_image.image.url }}"
+                 class="product-card__img"
+                 alt="{% if product.series %}{{ product.series.name|clean_text }} {% endif %}{{ product.model_name_ru|clean_text }} — фото"
+                 loading="lazy">
+        {% else %}
+            <div class="product-card__placeholder" aria-hidden="true">
+                {% include "components/vehicle_placeholder_svg.html" with svg_class="w-100 h-100" %}
+            </div>
+        {% endif %}
+        {% with images_total=product.images.all|length %}
+            {% if images_total > 1 %}
+                <span class="photo-count-badge">+{{ images_total|add:"-1" }} фото</span>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="product-card__body p-3 d-flex flex-column">
+        <div class="product-card__badges d-flex flex-wrap gap-2 mb-2">
+            {% if product.is_used %}<span class="badge">Б/у</span>{% endif %}
+            {% if product.total_qty|default:0 > 0 %}
+                <span class="badge badge-accent">В наличии</span>
+            {% else %}
+                <span class="badge">Под заказ</span>
+            {% endif %}
+            {% if product.series %}<span class="badge">{{ product.series.name|clean_text }}</span>{% endif %}
+            {% if show_model_variant and product.model_variant %}<span class="badge">{{ product.model_variant.name|clean_text }}</span>{% endif %}
+            {% if product.category %}<span class="badge">{{ product.category.name|clean_text }}</span>{% endif %}
+        </div>
+
+        <div class="product-card__title fw-bold mb-1{% if not product.model_name_ru %} product-card__title--empty{% endif %}"{% if not product.model_name_ru %} aria-hidden="true"{% endif %}>
+            {{ product.model_name_ru|default:""|clean_text }}
+        </div>
+
+        <div class="product-card__description small text-muted mb-3{% if not product.short_description_ru %} product-card__description--empty{% endif %}"{% if not product.short_description_ru %} aria-hidden="true"{% endif %}>
+            {{ product.short_description_ru|default:""|clean_text }}
+        </div>
+
+        <div class="product-card__footer mt-auto d-flex flex-column gap-2">
+            <div class="product-card__price fw-bold {% if product.display_price is not None %}text-accent{% endif %}">
+                {% if product.display_price is not None %}
+                    от {{ product.display_price|format_rub }}
+                {% else %}
+                    Цена: по запросу
+                {% endif %}
+            </div>
+
+            <div class="product-card__actions">
+                <a class="btn btn-ghost w-100" href="{{ product.get_absolute_url }}">Подробнее</a>
+                {% if show_kp_button %}
+                    <a class="btn btn-accent w-100" href="{% url 'catalog:lead_page' %}?product_slug={{ product.slug }}{% if kp_source %}&source={{ kp_source }}{% endif %}">Получить КП</a>
+                {% else %}
+                    <span class="btn btn-accent w-100 product-card__action-placeholder" aria-hidden="true">Получить КП</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+

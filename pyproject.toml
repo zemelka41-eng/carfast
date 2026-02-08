@@ -1,0 +1,45 @@
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+py_version = 312
+skip = ["migrations", ".venv", "env", "node_modules"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["carfst_site", "catalog", "tests"]
+extend-exclude = ["migrations", ".venv", "env", "node_modules"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "DJ", "UP"]
+ignore = ["DJ008"]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"*/migrations/*" = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.13"
+plugins = ["mypy_django_plugin.main"]
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+ignore_missing_imports = true
+follow_imports = "silent"
+exclude = ["migrations/", "\\.venv/", "^env/", "node_modules/"]
+
+[tool.django-stubs]
+django_settings_module = "carfst_site.settings"

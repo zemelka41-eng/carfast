@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'admin/carfast_admin.css' %}">
+{% endblock %}
+
+{% block blockbots %}
+  <meta name="robots" content="noindex, nofollow, noarchive">
+{% endblock %}
+
+{% block branding %}
+  <div id="site-name">
+    <a href="{% url 'admin:index' %}">CARFAST Admin</a>
+  </div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+

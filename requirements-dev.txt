@@ -1,0 +1,10 @@
+-r requirements.txt
+
+# Development tooling for Python 3.14 / Django 5.1
+black>=24.8.0,<25.0
+isort>=5.13.2,<5.14
+ruff>=0.6.0,<0.7
+mypy>=1.11,<1.13
+django-stubs>=5.0,<5.2
+djangorestframework-stubs>=3.15,<3.16
+types-requests>=2.32,<2.33

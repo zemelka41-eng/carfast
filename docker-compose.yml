@@ -1,0 +1,97 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-carfst}
+      POSTGRES_USER: ${DATABASE_USER:-carfst}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-carfst_password}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    restart: unless-stopped
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DEBUG: ${DEBUG:-1}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key}
+      DATABASE_HOST: db
+      DATABASE_NAME: ${DATABASE_NAME:-carfst}
+      DATABASE_USER: ${DATABASE_USER:-carfst}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-carfst_password}
+      DATABASE_PORT: 5432
+      REDIS_URL: redis://redis:6379/0
+      ALLOWED_HOSTS: localhost,127.0.0.1
+    volumes:
+      - .:/app
+      - media:/app/media
+      - static:/app/static
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  pg_data:
+  media:
+  static:
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: carfst_db
+      POSTGRES_USER: carfst_user
+      POSTGRES_PASSWORD: carfst_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carfst_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+
+  # Optional: Redis for Celery (uncomment if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+

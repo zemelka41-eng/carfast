@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="mb-4">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-accent">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Спасибо за заявку!</h1>
+                <p class="lead text-muted mb-4">
+                    Ваша заявка принята. Мы свяжемся с вами в ближайшее время.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <a class="btn btn-accent btn-lg" href="{% url 'catalog:catalog_in_stock' %}">Вернуться в каталог</a>
+                    <a class="btn btn-ghost btn-lg" href="{% url 'catalog:home' %}">На главную</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

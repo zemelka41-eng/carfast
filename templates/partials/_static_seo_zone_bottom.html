@@ -1,0 +1,35 @@
+{% comment %}
+Выводит SEO body и FAQ внизу страницы, закрывает #static-seo-zone (leasing, used, service, parts, payment-delivery).
+{% endcomment %}
+{% if static_seo_body_html %}
+<div class="static-seo-body mt-4 surface p-4 p-lg-5">{{ static_seo_body_html|safe }}</div>
+{% endif %}
+{% if static_faq_items %}
+<section class="mt-4">
+    <div class="surface p-4 p-lg-5">
+        <h2 class="h4 mb-3">Частые вопросы</h2>
+        <div class="accordion" id="staticSeoFaq">
+            {% for item in static_faq_items %}
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#staticSeoFaq{{ forloop.counter }}"
+                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                            aria-controls="staticSeoFaq{{ forloop.counter }}">
+                        {{ item.question }}
+                    </button>
+                </h3>
+                <div id="staticSeoFaq{{ forloop.counter }}"
+                     class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                     data-bs-parent="#staticSeoFaq">
+                    <div class="accordion-body">{{ item.answer }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+</div>

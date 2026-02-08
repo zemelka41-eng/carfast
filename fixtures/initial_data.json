@@ -1,0 +1,47 @@
+[
+  {
+    "model": "catalog.series",
+    "pk": 1,
+    "fields": {"name": "Серия A", "slug": "series-a", "description_ru": "", "description_en": ""}
+  },
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {"name": "Грузовики", "slug": "trucks"}
+  },
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "sku": "SKU001",
+      "slug": "product-1",
+      "series": 1,
+      "category": 1,
+      "model_name_ru": "Модель 1",
+      "model_name_en": "Model 1",
+      "short_description_ru": "Краткое описание",
+      "short_description_en": "Short description",
+      "description_ru": "Описание товара",
+      "description_en": "Product description",
+      "price": "100000.00",
+      "availability": "IN_STOCK",
+      "engine_model": "",
+      "power_hp": 320,
+      "wheel_formula": "6x4",
+      "payload_tons": "5.0",
+      "dimensions": "6x2x2",
+      "options": {},
+      "tags": [],
+      "published": true,
+      "views_count": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]
+
+
+
+
+
+

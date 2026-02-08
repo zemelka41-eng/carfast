@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <nav class="small text-muted mb-2">
+            <a class="link-muted link-accent-hover" href="{% url 'catalog:home' %}">Главная</a>
+            <span class="mx-2">/</span>
+            <a class="link-muted link-accent-hover" href="{% url 'blog:blog_list' %}">Блог</a>
+        </nav>
+        <div class="small text-muted mb-2">
+            {{ post.published_at|date:"d.m.Y" }} · {{ reading_time }} мин чтения
+        </div>
+        <h1 class="display-6 fw-bold mb-3">{{ post.title }}</h1>
+        {% if post.excerpt %}
+            <div class="text-muted">{{ post.excerpt }}</div>
+        {% endif %}
+    </div>
+</section>
+
+{% if post.cover_image %}
+    <section class="mb-4">
+        <div class="frame-dark p-2">
+            <img class="img-fluid w-100 rounded" src="{{ post.cover_image.url }}" alt="{{ post.cover_alt|default:post.title }}" loading="lazy">
+        </div>
+    </section>
+{% endif %}
+
+<section class="mb-5">
+    <div class="surface p-4 p-lg-5">
+        <div class="blog-content text-muted blog-post-content">
+            {{ content_with_images|safe }}
+        </div>
+    </div>
+</section>
+
+{% if remaining_images %}
+    <section class="mb-5" data-blog-gallery>
+        <div class="surface p-4 p-lg-5">
+            <h2 class="h4 mb-3">Галерея</h2>
+            <div class="row g-3">
+                {% for img in remaining_images %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <figure class="m-0">
+                            <img src="{{ img.image.url }}" alt="{{ img.alt|default:post.title }}" loading="lazy" class="img-fluid rounded">
+                            {% if img.caption %}
+                                <figcaption class="small text-muted mt-2">{{ img.caption }}</figcaption>
+                            {% endif %}
+                        </figure>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% if hub_links %}
+<section class="mb-5" aria-label="Подбор техники">
+    <div class="surface p-4 p-lg-5">
+        <h2 class="h4 mb-3">Подбор техники</h2>
+        <ul class="list-unstyled mb-0 row g-2">
+            {% for link in hub_links %}
+            <li class="col-md-6 col-lg-4"><a href="{{ link.url }}">{{ link.label }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+{% include "partials/_cta_strip.html" %}
+{% endblock %}

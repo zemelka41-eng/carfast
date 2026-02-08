@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="mb-4">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-1">{% trans "Контакты" %}</h1>
+            {% if selected_series and selected_series.slug == "shacman" %}
+                <div class="text-muted">CARFAST — официальный дилер SHACMAN</div>
+            {% endif %}
+        </div>
+        <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}">Получить КП</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="d-grid gap-3">
+                <div class="card-dark p-3">
+                    <div class="text-uppercase small text-muted mb-3">Адреса</div>
+                    <div class="d-grid gap-3">
+                        {% if company_addresses %}
+                            {% for addr in company_addresses %}
+                                <div>
+                                    <div class="fw-bold mb-1">
+                                        {% if addr.label %}{{ addr.label }}{% elif addr.title %}{{ addr.title }}{% elif forloop.first %}Офис (МО){% else %}Главный офис дилера (Саратов){% endif %}
+                                    </div>
+                                    <div class="text-muted mb-2">{{ addr.full_address }}</div>
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-ghost btn-sm" href="{{ addr.yandex_maps_url }}" target="_blank" rel="noopener noreferrer">Открыть в Яндекс.Картах</a>
+                                        <a class="btn btn-ghost btn-sm" href="{{ addr.google_maps_url }}" target="_blank" rel="noopener noreferrer">Открыть в Google Maps</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div>
+                                <div class="fw-bold mb-1">Офис (МО)</div>
+                                <div class="text-muted mb-2">Новорязанское ш., 6, Котельники, Московская обл., 140054</div>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-ghost btn-sm" href="https://yandex.ru/maps/?text=Новорязанское%20ш.%2C%206%2C%20Котельники%2C%20Московская%20обл.%2C%20140054" target="_blank" rel="noopener noreferrer">Открыть в Яндекс.Картах</a>
+                                    <a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/search/?api=1&query=Новорязанское%20ш.%2C%206%2C%20Котельники%2C%20Московская%20обл.%2C%20140054" target="_blank" rel="noopener noreferrer">Открыть в Google Maps</a>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fw-bold mb-1">Главный офис дилера (Саратов)</div>
+                                <div class="text-muted mb-2">410005, Саратовская область, г. Саратов, ул. Б.Садовая, дом 239, БЦ «Навигатор», офис 501</div>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-ghost btn-sm" href="https://yandex.ru/maps/?text=410005%2C%20Саратовская%20область%2C%20г.%20Саратов%2C%20ул.%20Б.Садовая%2C%20дом%20239%2C%20БЦ%20%C2%ABНавигатор%C2%BB%2C%20офис%20501" target="_blank" rel="noopener noreferrer">Открыть в Яндекс.Картах</a>
+                                    <a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/search/?api=1&query=410005%2C%20Саратовская%20область%2C%20г.%20Саратов%2C%20ул.%20Б.Садовая%2C%20дом%20239%2C%20БЦ%20%C2%ABНавигатор%C2%BB%2C%20офис%20501" target="_blank" rel="noopener noreferrer">Открыть в Google Maps</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if site_settings and site_settings.work_hours %}
+                        <div class="small text-muted mt-3">{{ site_settings.work_hours }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="card-dark p-3">
+                    <div class="fw-bold mb-3">Как получить КП</div>
+                    <div class="d-grid gap-3">
+                        <div>
+                            <div class="fw-bold text-accent mb-1">1. Оставьте заявку</div>
+                            <div class="small text-muted">Укажите технику или задачу, и мы подготовим коммерческое предложение.</div>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-accent mb-1">2. Уточним детали</div>
+                            <div class="small text-muted">Свяжемся с вами, чтобы учесть все требования и условия.</div>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-accent mb-1">3. Отправим КП</div>
+                            <div class="small text-muted">Подготовим и направим коммерческое предложение с ценами и условиями.</div>
+                        </div>
+                    </div>
+                    <div class="small text-muted mt-3">Ответим в рабочее время.</div>
+                    <div class="mt-3">
+                        <a class="btn btn-accent" href="{% url 'catalog:lead_page' %}">Получить КП</a>
+                    </div>
+                </div>
+
+                {% if company_requisites %}
+                    <div class="card-dark p-3">
+                        <div class="fw-bold mb-3">Реквизиты</div>
+                        <div class="d-grid gap-2 small">
+                            {% if company_requisites.inn %}
+                                <div>
+                                    <span class="text-muted">ИНН:</span> <span class="fw-bold">{{ company_requisites.inn }}</span>
+                                </div>
+                            {% endif %}
+                            {% if company_requisites.ogrn %}
+                                <div>
+                                    <span class="text-muted">ОГРН:</span> <span class="fw-bold">{{ company_requisites.ogrn }}</span>
+                                </div>
+                            {% endif %}
+                            {% if company_requisites.legal_address %}
+                                <div>
+                                    <span class="text-muted">Юридический адрес (для документов):</span><br>
+                                    <span>{{ company_requisites.legal_address }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card-dark p-3 h-100">
+                            <div class="text-uppercase small text-muted mb-2">{% trans "Телефон" %}</div>
+                            <a class="topbar-link fw-bold" href="{{ contact_phone_href }}">{{ contact_phone_display }}</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-dark p-3 h-100">
+                            <div class="text-uppercase small text-muted mb-2">Email</div>
+                            <a class="topbar-link fw-bold" href="{{ contact_email_href|default:'mailto:info@carfst.ru' }}">{{ contact_email_display|default:"info@carfst.ru" }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card-dark p-3 h-100">
+                            <div class="text-uppercase small text-muted mb-2">WhatsApp</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <a class="topbar-icon topbar-icon--lg"
+                                   href="{{ contact_whatsapp_href }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="Написать в WhatsApp">
+                                    <span class="visually-hidden">WhatsApp</span>
+                                    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+                                        <path fill="currentColor" d="M19.11 17.37c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.6.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.6.07-.27-.14-1.16-.43-2.21-1.36-.82-.73-1.37-1.63-1.53-1.9-.16-.27-.02-.42.12-.56.12-.12.27-.32.4-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.6-1.46-.82-2-.21-.51-.43-.44-.6-.45h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27 0 1.34.98 2.63 1.11 2.82.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.56.58.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.28.23-.63.23-1.17.16-1.28-.07-.11-.25-.18-.52-.32ZM16.02 27.84h-.01c-1.98 0-3.92-.53-5.62-1.53l-.4-.24-4.16 1.09 1.11-4.06-.26-.42A11.77 11.77 0 0 1 4.25 16c0-6.49 5.28-11.77 11.77-11.77 3.15 0 6.11 1.23 8.34 3.45A11.72 11.72 0 0 1 27.8 16c0 6.49-5.29 11.84-11.78 11.84Zm9.98-20.18A14.02 14.02 0 0 0 16.02 2C8.28 2 2 8.28 2 16c0 2.47.65 4.88 1.88 7.01L2 30l7.17-1.88A13.94 13.94 0 0 0 16.02 30C23.72 30 30 23.72 30 16c0-3.74-1.46-7.26-4-9.34Z"/>
+                                    </svg>
+                                </a>
+                                <div class="small text-muted">Написать</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-dark p-3 h-100">
+                            <div class="text-uppercase small text-muted mb-2">Telegram</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <a class="topbar-icon topbar-icon--lg"
+                                   href="{{ contact_telegram_href }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="Написать в Telegram">
+                                    <span class="visually-hidden">Telegram</span>
+                                    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                                        <path fill="currentColor" d="M9.73 15.24 9.5 19.1c.39 0 .56-.17.76-.37l1.82-1.75 3.77 2.76c.69.38 1.18.18 1.35-.64l2.45-11.52c.21-1.01-.36-1.41-1.03-1.16L4.21 10.1c-.97.38-.96.92-.17 1.17l3.72 1.16 8.63-5.45c.41-.27.78-.12.47.15"/>
+                                    </svg>
+                                </a>
+                                <div class="small text-muted">Написать</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if contact_max_href %}
+                        <div class="col-md-6">
+                            <div class="card-dark p-3 h-100">
+                                <div class="text-uppercase small text-muted mb-2">MAX</div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <a class="topbar-icon topbar-icon--lg"
+                                       href="{{ contact_max_href }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       aria-label="Написать в MAX">
+                                        <span aria-hidden="true" class="small fw-bold">MAX</span>
+                                    </a>
+                                    <div class="small text-muted">Написать</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="surface surface--tight" id="feedback">
+                    <div class="fw-bold mb-2">Обратная связь</div>
+                    <form action="{% url 'catalog:contacts' %}#feedback" method="post" class="d-grid gap-2" novalidate>
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        {{ form.honeypot }}
+
+                        <div>
+                            <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+                        </div>
+                        <div>
+                            <label for="{{ form.phone.id_for_label }}" class="form-label">{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
+                        </div>
+                        <div>
+                            <label for="{{ form.city.id_for_label }}" class="form-label">{{ form.city.label }}</label>
+                            {{ form.city }}
+                            {{ form.city.errors }}
+                        </div>
+                        <div>
+                            <label for="{{ form.message.id_for_label }}" class="form-label">{{ form.message.label }}</label>
+                            {{ form.message }}
+                            {{ form.message.errors }}
+                        </div>
+
+                        <div class="form-check">
+                            {{ form.consent }}
+                            <label class="form-check-label small text-muted" for="{{ form.consent.id_for_label }}">
+                                Я согласен(-на) на обработку персональных данных и ознакомлен(-а) с
+                                <a class="link-muted link-accent-hover" href="{% url 'catalog:privacy' %}">политикой конфиденциальности</a>.
+                            </label>
+                        </div>
+                        {{ form.consent.errors }}
+
+                        <button class="btn btn-accent" type="submit">Отправить</button>
+                        {% include "partials/_privacy_consent.html" %}
+                        {% if selected_series and selected_series.slug == "shacman" %}
+                            <div class="small text-muted">CARFAST — официальный дилер SHACMAN.</div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card-dark p-3 h-100">
+                <div class="fw-bold mb-3">Карта</div>
+                {% if site_settings and site_settings.map_embed %}
+                    <div class="frame-dark">
+                        <div class="ratio ratio-16x9">
+                            {{ site_settings.map_embed|safe }}
+                        </div>
+                    </div>
+                {% else %}
+                    {% if site_settings and site_settings.address %}
+                        {% with address=site_settings.address %}
+                            <div class="text-muted mb-3">
+                                <span class="fw-bold">Офис (МО):</span>
+                                {{ address }}
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-ghost" href="https://yandex.ru/maps/?text={{ address|urlencode }}" target="_blank" rel="noopener noreferrer">Открыть в Яндекс.Картах</a>
+                                <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query={{ address|urlencode }}" target="_blank" rel="noopener noreferrer">Открыть в Google Maps</a>
+                            </div>
+                        {% endwith %}
+                    {% else %}
+                        {% with address="Новорязанское ш., 6, Котельники, Московская обл., 140054" %}
+                            <div class="text-muted mb-3">
+                                <span class="fw-bold">Офис (МО):</span>
+                                {{ address }}
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-ghost" href="https://yandex.ru/maps/?text={{ address|urlencode }}" target="_blank" rel="noopener noreferrer">Открыть в Яндекс.Картах</a>
+                                <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query={{ address|urlencode }}" target="_blank" rel="noopener noreferrer">Открыть в Google Maps</a>
+                            </div>
+                        {% endwith %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

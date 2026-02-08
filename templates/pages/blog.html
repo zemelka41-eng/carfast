@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Блог — CARFAST{% endblock %}
+{% block meta_description %}Новости, обзоры и полезные материалы по коммерческой технике.{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <h1 class="h2 mb-2">Блог</h1>
+        <div class="text-muted">Материалы о технике, эксплуатации и рынке.</div>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Скоро</div>
+        <div class="text-muted">Готовим первые публикации. Следите за обновлениями.</div>
+    </div>
+</section>
+
+<section>
+    <div class="surface p-4 p-lg-5">
+        <div class="h4 mb-2">Есть тема для статьи?</div>
+        <div class="text-muted mb-3">Подскажите, что важно для вашей задачи — подготовим материал.</div>
+        <a class="btn btn-ghost" href="{% url 'catalog:contacts' %}">Связаться</a>
+    </div>
+</section>
+
+{% include "partials/_cta_strip.html" %}
+{% endblock %}

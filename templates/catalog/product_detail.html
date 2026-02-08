@@ -1,0 +1,486 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load catalog_format %}
+{% load static %}
+{% block body_class %}has-mobile-sticky-cta{% endblock %}
+{% block content %}
+<section class="mb-4">
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-6">
+            <div class="frame-dark p-2">
+                {% with images=product.images.all %}
+                    {% if images %}
+                        {% if images|length == 1 %}
+                                {% for image in images %}
+                                    <img src="{{ image.image.url }}"
+                                         class="img-fluid w-100 rounded product-gallery__img"
+                                         alt="{% if image.alt_ru %}{{ image.alt_ru|clean_text }}{% else %}{{ product_seo_image_alt|default:'' }}{% endif %}"
+                                         loading="lazy">
+                            {% endfor %}
+                        {% else %}
+                            <div id="productImageCarousel" class="carousel slide product-carousel" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    {% for image in images %}
+                                        <button type="button"
+                                                data-bs-target="#productImageCarousel"
+                                                data-bs-slide-to="{{ forloop.counter0 }}"
+                                                class="{% if forloop.first %}active{% endif %}"
+                                                {% if forloop.first %}aria-current="true"{% endif %}
+                                                aria-label="Фото {{ forloop.counter }}"></button>
+                                    {% endfor %}
+                                </div>
+                                <div class="carousel-inner rounded">
+                                    {% for image in images %}
+                                        <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                                            <img src="{{ image.image.url }}"
+                                                 class="d-block w-100 rounded product-gallery__img"
+                                                 alt="{% if image.alt_ru %}{{ image.alt_ru|clean_text }}{% else %}{{ product_seo_image_alt|default:'' }}{% endif %}"
+                                                 {% if not forloop.first %}loading="lazy"{% endif %}>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productImageCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Предыдущее</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productImageCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Следующее</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="ratio ratio-4x3 rounded overflow-hidden">
+                            {% include "components/vehicle_placeholder_svg.html" with svg_class="w-100 h-100" %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                {% if product.is_used %}<span class="badge">Б/у</span>{% endif %}
+                {% if product.total_qty|default:0 > 0 %}
+                    <span class="badge badge-accent">В наличии</span>
+                {% else %}
+                    <span class="badge">Под заказ</span>
+                {% endif %}
+                {% if product.series %}<span class="badge">{{ product.series.name|clean_text }}</span>{% endif %}
+                {% if product.model_variant %}<span class="badge">{{ product.model_variant.name|clean_text }}</span>{% endif %}
+                {% if product.category %}<span class="badge">{{ product.category.name|clean_text }}</span>{% endif %}
+            </div>
+
+            <h1 class="display-6 fw-bold mb-2">{% if product_seo_h1 %}{{ product_seo_h1 }}{% else %}{{ product.model_name_ru|clean_text }}{% endif %}</h1>
+            {% if product.short_description_ru %}
+                <div class="text-muted mb-3">{{ product.short_description_ru|clean_text }}</div>
+            {% endif %}
+
+            <div class="surface surface--tight mb-3">
+                    <div class="d-flex align-items-baseline justify-content-between flex-wrap gap-2">
+                    <div class="small text-muted">Цена от</div>
+                    <div class="h4 mb-0 fw-bold {% if product.display_price is not None %}text-accent{% endif %}">
+                        {% if product.display_price is not None %}от {{ product.display_price|format_rub }}{% else %}По запросу{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="surface surface--tight mb-3">
+                    <div class="d-flex align-items-baseline justify-content-between flex-wrap gap-2">
+                    <div class="small text-muted">Наличие</div>
+                    <div class="h5 mb-0 fw-bold {% if product.total_qty|default:0 > 0 %}text-accent{% endif %}">
+                        {% if product.total_qty|default:0 > 0 %}В наличии{% else %}Под заказ{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex">
+                <a class="btn btn-accent btn-lg" href="{% url 'catalog:lead_page' %}?product_slug={{ product.slug }}">Получить КП по этой модели</a>
+                <a class="btn btn-ghost btn-lg" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a class="btn btn-ghost btn-lg" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer">Telegram</a>
+                {% if contact_max_href %}
+                    <a class="btn btn-ghost btn-lg" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer">MAX</a>
+                {% endif %}
+            </div>
+
+            <hr class="hr-dim my-4">
+
+            <div class="surface surface--tight mb-4">
+                <div class="fw-bold mb-3">Ключевые характеристики</div>
+                <div class="d-grid gap-2 small">
+                    {% if product.is_used %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Состояние" %}</span>
+                            <span class="text-end">{% trans "Б/у" %}</span>
+                        </div>
+                    {% endif %}
+                    {% if product.series %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Бренд" %}</span>
+                            <span class="text-end">{{ product.series.name }}</span>
+                        </div>
+                    {% endif %}
+                    {% if product.category %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Категория" %}</span>
+                            <span class="text-end">{{ product.category.name }}</span>
+                        </div>
+                    {% endif %}
+                    {% if product.model_variant %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Модель" %}</span>
+                            <span class="text-end">{{ product.model_variant.name }}</span>
+                        </div>
+                    {% endif %}
+                    {% if product.engine_model %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Двигатель" %}</span>
+                            <span class="text-end">{{ product.engine_model }}</span>
+                        </div>
+                    {% endif %}
+                    {% if product.power_hp %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Мощность" %}</span>
+                            <span class="text-end">{{ product.power_hp }} л.с.</span>
+                        </div>
+                    {% endif %}
+                    {% if product.wheel_formula %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Колёсная формула" %}</span>
+                            <span class="text-end">{{ product.wheel_formula }}</span>
+                        </div>
+                    {% endif %}
+                    {% if product.payload_tons %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Грузоподъёмность" %}</span>
+                            <span class="text-end">{{ product.payload_tons }} т</span>
+                        </div>
+                    {% endif %}
+                    {% if product.dimensions %}
+                        <div class="d-flex justify-content-between gap-3">
+                            <span class="text-muted">{% trans "Габариты" %}</span>
+                            <span class="text-end">{{ product.dimensions }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if description_paragraphs %}
+                <div class="surface surface--tight mb-4 d-none d-lg-block">
+                    <div class="fw-bold mb-3">Описание</div>
+                    <div class="d-grid gap-2 text-muted">
+                        {% for paragraph in description_paragraphs %}
+                            <p class="mb-0">{{ paragraph|clean_text }}</p>
+                        {% endfor %}
+                    </div>
+                    {% if description_bullets %}
+                        <ul class="mt-3 mb-0">
+                            {% for item in description_bullets %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if options_rows %}
+                <div class="surface surface--tight mb-4 d-none d-lg-block">
+                    <div class="fw-bold mb-3">Характеристики</div>
+                    {% include "catalog/_product_specs.html" with options_rows=options_rows %}
+                </div>
+            {% endif %}
+
+            {% if config_primary %}
+                <div class="surface surface--tight mb-4 d-none d-lg-block">
+                    <div class="fw-bold mb-3">Комплектация</div>
+                    <ul class="product-config-list mb-0">
+                        {% for item in config_primary %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% if config_more %}
+                        <ul class="product-config-list collapse mt-2 mb-0" id="productConfigMore">
+                            {% for item in config_more %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if config_more %}
+                        <button class="btn btn-sm btn-ghost mt-2"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#productConfigMore"
+                                aria-expanded="false"
+                                aria-controls="productConfigMore">
+                            Показать всё
+                        </button>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if faq_items %}
+                <div class="surface surface--tight mb-4">
+                    <div class="fw-bold mb-3">FAQ</div>
+                    <div class="accordion" id="productFaq">
+                        {% for item in faq_items %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#productFaq{{ forloop.counter }}">
+                                        {{ item.question|clean_text }}
+                                    </button>
+                                </h2>
+                                <div id="productFaq{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#productFaq">
+                                    <div class="accordion-body">{{ item.answer|clean_text }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="surface surface--tight mb-4">
+                    <div class="fw-bold mb-3">FAQ</div>
+                    <div class="accordion" id="productFaq">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqDelivery">
+                                    Какие сроки поставки?
+                                </button>
+                            </h2>
+                            <div id="faqDelivery" class="accordion-collapse collapse" data-bs-parent="#productFaq">
+                                <div class="accordion-body">
+                                    Сроки зависят от наличия техники и региона доставки. Для техники в наличии — быстрее, для под заказ — согласуем с производителем.
+                                    Рассчитаем точные сроки в составе коммерческого предложения после уточнения требований.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqPayment">
+                                    Какие варианты оплаты?
+                                </button>
+                            </h2>
+                            <div id="faqPayment" class="accordion-collapse collapse" data-bs-parent="#productFaq">
+                                <div class="accordion-body">
+                                    Работаем с различными вариантами оплаты: предоплата, частичная оплата, оплата по факту поставки.
+                                    Возможен лизинг и другие варианты финансирования. Уточним условия в коммерческом предложении.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqWarranty">
+                                    Какая гарантия и сервис?
+                                </button>
+                            </h2>
+                            <div id="faqWarranty" class="accordion-collapse collapse" data-bs-parent="#productFaq">
+                                <div class="accordion-body">
+                                    Вся техника поставляется с гарантией производителя. Организуем сервисное обслуживание и поставку запчастей.
+                                    Поддерживаем на всех этапах эксплуатации — консультируем по техническому обслуживанию.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqConfig">
+                                    Можно ли изменить комплектацию?
+                                </button>
+                            </h2>
+                            <div id="faqConfig" class="accordion-collapse collapse" data-bs-parent="#productFaq">
+                                <div class="accordion-body">
+                                    Да, подберём комплектацию под вашу задачу. Учтем требования по опциям, дополнительному оборудованию и особенностям эксплуатации.
+                                    Уточните требования в заявке или при обращении.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqLeasing">
+                                    Возможен ли лизинг?
+                                </button>
+                            </h2>
+                            <div id="faqLeasing" class="accordion-collapse collapse" data-bs-parent="#productFaq">
+                                <div class="accordion-body">
+                                    Да, помогаем с лизингом и другими вариантами финансирования. Подберём программу под вашу задачу и бюджет.
+                                    Укажите необходимость в заявке — подготовим варианты по срокам и платежам.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% if same_model_products %}
+    <section class="mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+            <h2 class="h4 fw-bold mb-0">Другие предложения этой модели</h2>
+            {% if product.series and product.category %}
+                <a class="link-accent-hover small" href="{% url 'catalog:catalog_series_category' series_slug=product.series.slug category_slug=product.category.slug %}">Смотреть категорию</a>
+            {% endif %}
+        </div>
+        <div class="row g-3">
+            {% for p in same_model_products %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    {% include "catalog/_product_card.html" with product=p variant="catalog" show_model_variant=1 show_kp_button=1 %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+{% if related_products %}
+    <section class="mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+            <h2 class="h4 fw-bold mb-0">Похожие SHACMAN в наличии</h2>
+            <a class="link-accent-hover small" href="{% url 'catalog:catalog_in_stock' %}">Смотреть каталог</a>
+        </div>
+        <div class="row g-3">
+            {% for p in related_products %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    {% include "catalog/_product_card.html" with product=p variant="catalog" show_model_variant=1 show_kp_button=1 %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+{% if seo_hub_links %}
+    <section class="mb-4">
+        <div class="surface surface--tight p-3">
+            <div class="fw-bold mb-2">Полезные разделы</div>
+            <ul class="list-unstyled mb-0 d-flex flex-wrap gap-2">
+                {% for link in seo_hub_links %}
+                    <li><a class="link-accent-hover" href="{{ link.url }}">{{ link.label }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endif %}
+
+<section class="mb-4">
+    <div class="surface surface--tight">
+        <div class="fw-bold mb-3">Наличие по городам</div>
+        {% if offers %}
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th scope="col">Город</th>
+                            <th scope="col" class="text-end">Наличие</th>
+                            <th scope="col" class="text-end">Цена</th>
+                            <th scope="col" class="text-end">Год</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for offer in offers %}
+                            <tr {% if offer.qty|default:0 == 0 %}class="text-muted"{% endif %}>
+                                <td>{{ offer.city.name }}</td>
+                                <td class="text-end">{% if offer.qty|default:0 > 0 %}В наличии{% else %}Под заказ{% endif %}</td>
+                                <td class="text-end">{% if offer.price is not None %}{{ offer.price|format_rub }}{% else %}—{% endif %}</td>
+                                <td class="text-end">{% if offer.year %}{{ offer.year }}{% else %}—{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-muted">Активных предложений пока нет.</div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="card-dark p-4">
+        <div class="fw-bold mb-3">Условия поставки и оплаты</div>
+        <div class="text-muted small">
+            <p class="mb-2">Подготовим коммерческое предложение с условиями поставки и оплаты. Обсудим сроки доставки, варианты оплаты и оформление документов.</p>
+            <p class="mb-0">Работаем с юридическими лицами и индивидуальными предпринимателями. Возможны различные варианты оплаты и финансирования.</p>
+        </div>
+    </div>
+</section>
+
+<section class="d-lg-none">
+    <div class="accordion" id="productTabs">
+        {% if description_paragraphs %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#desc">
+                        {% trans "Описание" %}
+                    </button>
+                </h2>
+                <div id="desc" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="d-grid gap-2 text-muted">
+                            {% for paragraph in description_paragraphs %}
+                                <p class="mb-0">{{ paragraph|clean_text }}</p>
+                            {% endfor %}
+                        </div>
+                        {% if description_bullets %}
+                            <ul class="mt-3 mb-0">
+                                {% for item in description_bullets %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if options_rows %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button {% if not description_paragraphs %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#options">
+                        {% trans "Характеристики" %}
+                    </button>
+                </h2>
+                <div id="options" class="accordion-collapse collapse {% if not description_paragraphs %}show{% endif %}">
+                    <div class="accordion-body">
+                        {% include "catalog/_product_specs.html" with options_rows=options_rows %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if config_primary %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#config">
+                        {% trans "Комплектация" %}
+                    </button>
+                </h2>
+                <div id="config" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <ul class="product-config-list mb-0">
+                            {% for item in config_primary %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% if config_more %}
+                            <ul class="product-config-list mt-2 mb-0">
+                                {% for item in config_more %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="mobile-sticky-cta d-md-none" role="region" aria-label="Быстрый контакт">
+    <div class="container">
+        <div class="d-grid gap-2">
+            <a class="btn btn-accent btn-lg" href="{% url 'catalog:lead_page' %}?product_slug={{ product.slug }}">Получить КП по этой модели</a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-ghost flex-fill" href="{{ contact_whatsapp_href }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a class="btn btn-ghost flex-fill" href="{{ contact_telegram_href }}" target="_blank" rel="noopener noreferrer">Telegram</a>
+                {% if contact_max_href %}
+                    <a class="btn btn-ghost flex-fill" href="{{ contact_max_href }}" target="_blank" rel="noopener noreferrer">MAX</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
